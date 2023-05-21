@@ -1,0 +1,199 @@
+2.1.1 
+
+/address/create
+request:
+	Name
+	Phone
+	Address
+
+/address
+Request:
+	page_num
+Response:
+	[{
+		id
+		name....
+	}]
+
+/address/modify
+Request:
+	Id
+	Name...
+
+/address/delete
+Id
+
+/cart/create
+Request:
+	Product_id
+	Count
+
+/cart
+Request:
+	page_num
+response:
+	items[{
+        	id//购物车项id
+        	product_id
+        	name
+        	description
+        	image_num
+		shop_name//new
+    	}]
+
+
+/checkout/create
+Request:
+	items[{
+		product_id
+		number
+		remark
+	}]
+Response:
+	checkout_id
+
+/checkout
+Request:
+	page_num
+Response:
+	items[{
+		id//订单项id
+		remark
+		address
+		shops[{
+			id
+			status
+			shop_name
+			products[{
+				product_id
+				price
+        			name
+        			description
+        			image_num
+				number
+			}]	
+		}]
+		
+	}]
+
+/checkout/vendor
+Request:
+	shop_id
+	page_num
+Response:
+	items[{
+		id//订单项id
+		remark
+		status
+		username
+		address
+		products[{
+			product_id
+			price
+        		name
+        		description
+        		image_num
+			number
+		}]
+		
+	}]
+
+/pay 
+request:
+	checkout_id
+Response:
+	200
+	403
+		balance	
+
+
+2.1.2
+/flow
+Request
+	account_id
+	page_num
+	select//0：全部流水；1：近一个月；2：近一周
+response
+	items[{
+		roll_in
+		roll_out
+		amount
+		type//0： 1：佣金
+	}]
+
+2.1.3
+/checkout/create/product
+直接购买
+request
+	product_id
+	address_id
+	count
+response
+	(生成用户订单的id)
+
+/checkout/create/cart
+购物车购买
+request
+	address_id
+	cart_id	//数组，购物车项
+response
+	(生成用户订单的id)
+	
+/checkout/user
+这一部分只用于用户显示未付款的订单，因为要求订单分类，而付款前后的订单粒度并不一致，限于返回格式无法统一url
+request
+	canceled//未付款与已撤销
+response
+	id
+	time
+	cost
+	orders:[{ //按商店分类的订单
+		id
+		items:[{ //订单包含物品
+			id
+			product:{//略
+			}
+			count
+			cost //总价
+		}]
+		address:{
+			id
+			user //用户id
+			name
+			phone
+			address
+			time
+		}
+		
+	}]
+//注：此结构为OrderUser嵌套List<OrderShop>嵌套List<OrderItem>完整结构，以下不再展开，均用这三个类名指代。
+//回顾：OrderUser为用户下单粒度的订单，OrderShop为商家处理粒度的订单
+
+/checkout/user/shop
+用于向用户分类显示已付款的订单
+request
+	status //可能的取值SEND, RECEIVE, DONE, REFUNDED，分别对应待发货、待收货、已完成、已退款，下同
+response
+	List<OrderShop>
+
+/checkout/shop
+用于向商家分类显示已付款的订单
+request
+	shop_id
+	order_status
+	refund_status //可能的取值WAITING, APPROVED, DENIED, 分别对应待确认退款、已确认退款、拒绝退款
+	//以上order_status与refund_status有且仅有一个非null
+response
+	List<OrderShop>
+	
+/checkout/pay				付款 * //账户余额不足返回403
+/checkout/send				发货
+/checkout/receive			收货
+/checkout/refund			申请退款
+/checkout/refund/approve	确认退款
+/checkout/refund/deny		拒绝退款
+/checkout/cancel			取消订单 *
+/checkout/delete/user		删除已取消的订单 *
+/checkout/delete/shop		删除已完成或已退款的订单
+request
+	order_id //以上带*的url均为OrderUser的粒度，其余为OrderShop的粒度，传对应的id

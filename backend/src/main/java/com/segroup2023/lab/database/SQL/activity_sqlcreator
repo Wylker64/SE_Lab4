@@ -1,0 +1,26 @@
+CREATE TABLE mall_activity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    start_time DATETIME,
+    end_time DATETIME,
+    funds DOUBLE,
+    full_x DOUBLE,
+    minus_y DOUBLE,
+    registration_capital_threshold DOUBLE,
+    monthly_sales_volume_threshold DOUBLE,
+    monthly_sales_amount_threshold DOUBLE
+);
+
+
+CREATE TABLE product_category (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+
+CREATE TABLE activity_product_category (
+    activity_id BIGINT,
+    product_category_id BIGINT,
+    PRIMARY KEY (activity_id, product_category_id),
+    FOREIGN KEY (activity_id) REFERENCES mall_activity(id),
+    FOREIGN KEY (product_category_id) REFERENCES product_category(id)
+);
