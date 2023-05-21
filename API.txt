@@ -197,3 +197,51 @@ response
 /checkout/delete/shop		删除已完成或已退款的订单
 request
 	order_id //以上带*的url均为OrderUser的粒度，其余为OrderShop的粒度，传对应的id
+
+
+2.1.4 
+1.创建新活动
+/activity
+request type:POST
+	startTime
+	endTime
+	funds
+	productCategories		//list
+	fullX
+	minusY		//满X减Y
+	registrationCapitalThreshold
+	monthlySalesVolumeThreshold
+	monthlySalesAmountThreshold
+
+response:
+	Activity 类
+
+2.更新活动(update)
+/activity/{id}
+request type:PUT
+request与response和创建新活动相同
+
+3.删除活动
+/activity/{id}
+request type:DELETE
+response
+	200 OK status
+
+4.获取商品类别
+/activity/product_categories
+request type:GET
+response:
+	ProductCategory的list
+
+5.商家申请活动
+/activity/shops/{shopId}/activities/{activityId}/apply
+request type:POST
+response: 
+	shop	//申请活动的shop类
+
+6.批准申请活动
+/activity/shops/{shopId}/approve
+request type:POST
+response:
+	shop	//批准的shop
+	
