@@ -44,34 +44,18 @@ public class OrderController {
     private static class ViewUserRequest {
         @NotNull @Valid
         public UserAuthorization.Request authorize;
-        @NotNull
-        public Boolean canceled;
-    }
-
-    @PostMapping("/user")
-    public static List<OrderUser> getOrderUser(@RequestBody @Valid @NotNull ViewUserRequest request)
-        throws LoginFailureException {
-        User user = UserAuthorization.authorize(request.authorize);
-        List<OrderUserEntity> entityList = OrderService.getOrderUser(user.getId(), request.canceled);
-        List<OrderUser> orders = new ArrayList<>();
-        for (OrderUserEntity entity: entityList) {
-            orders.add(new OrderUser(entity));
-        }
-        return orders;
-    }
-
-    private static class ViewUserShopRequest {
-        @NotNull @Valid
-        public UserAuthorization.Request authorize;
-        @NotNull
         public String status;
     }
 
-    @PostMapping("/user/shop")
-    public static List<OrderShop> getOrderShopUser(@RequestBody @Valid @NotNull ViewUserShopRequest request)
+    @PostMapping("/user")
+    public static List<OrderShop> getOrderShopUser(@RequestBody @Valid @NotNull ViewUserRequest request)
         throws LoginFailureException {
         User user = UserAuthorization.authorize(request.authorize);
-        List<OrderShopEntity> entityList = OrderService.getOrderUser(user.getId(), OrderStatus.valueOf(request.status));
+        List<OrderShopEntity> entityList;
+        if (request.status == null)
+            entityList = OrderService.getOrderUser(user.getId(), null);
+        else
+            entityList = OrderService.getOrderUser(user.getId(), OrderStatus.valueOf(request.status));
         List<OrderShop> orders = new ArrayList<>();
         for (OrderShopEntity entity: entityList) {
             orders.add(new OrderShop(entity));
@@ -156,13 +140,7 @@ public class OrderController {
         OrderService.cancel(request.order_id);
     }
 
-    @PostMapping("/delete/user")
-    public static void deleteUser(@RequestBody @NotNull @Valid UpdateRequest request) throws LoginFailureException {
-        User user = UserAuthorization.authorize(request.authorize);
-        OrderService.deleteOrderUser(request.order_id);
-    }
-
-    @PostMapping("/delete/shop")
+    @PostMapping("/delete")
     public static void deleteShop(@RequestBody @NotNull @Valid UpdateRequest request) throws LoginFailureException {
         User user = UserAuthorization.authorize(request.authorize);
         OrderService.deleteOrderShop(request.order_id);

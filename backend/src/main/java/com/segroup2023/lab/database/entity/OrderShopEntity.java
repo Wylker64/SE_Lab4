@@ -1,5 +1,6 @@
 package com.segroup2023.lab.database.entity;
 
+import com.segroup2023.lab.service.OrderService;
 import com.segroup2023.lab.utils.ApplyStatus;
 import com.segroup2023.lab.utils.OrderStatus;
 import jakarta.persistence.*;
@@ -27,5 +28,9 @@ public class OrderShopEntity {
     @Getter @Setter
     @Enumerated(EnumType.STRING)
     private ApplyStatus refund;
+
+    public Long getUser() {
+        return OrderService.getUserEntity(orderUser).getUser();
+    }
 
 }

@@ -86,12 +86,11 @@ public class OrderService {
         return userEntity.getId();
     }
 
-    public static void pay(Long orderUserId) throws InsufficientBalanceException {
-        OrderUserEntity userEntity = getUserEntity(orderUserId);
-        AccountService.transferToAdmin(userEntity.getUser(), userEntity.getCost());
-        userEntity.setPaid(true);
-        userRepository.save(userEntity);
-        setOrderShopStatus(orderUserId, OrderStatus.SEND);
+    public static void pay(Long orderShopId) throws InsufficientBalanceException {
+        OrderShopEntity shopEntity = getShopEntity(orderShopId);
+        AccountService.transferToAdmin(shopEntity.getUser(), shopEntity.getCost());
+        shopEntity.setStatus(OrderStatus.SEND);
+        shopRepository.save(shopEntity);
     }
 
     public static void send(Long orderShopId) {
@@ -130,26 +129,11 @@ public class OrderService {
         AccountService.undoTransferToAdmin(getUserEntity(shopEntity.getOrderUser()).getUser(), shopEntity.getCost());
     }
 
-    public static void cancel(Long orderUserId) {
-        OrderUserEntity userEntity = getUserEntity(orderUserId);
-        assert !userEntity.getPaid():"Order already paid.";
-        userEntity.setCanceled(true);
-        userRepository.save(userEntity);
-        setOrderShopStatus(orderUserId, OrderStatus.CANCELED);
-    }
-
-    private static void setOrderShopStatus(Long orderUserId, OrderStatus status) {
-        List<OrderShopEntity> shopEntities = shopRepository.findByOrderUser(orderUserId);
-        for (OrderShopEntity shopEntity : shopEntities) {
-            shopEntity.setStatus(status);
-            shopRepository.save(shopEntity);
-        }
-    }
-
-    public static void deleteOrderUser(Long orderUserId) {
-        OrderUserEntity userEntity = getUserEntity(orderUserId);
-        assert userEntity.getCanceled():"Order not canceled yet.";
-        userRepository.delete(userEntity);
+    public static void cancel(Long orderShopId) {
+        OrderShopEntity shopEntity = getShopEntity(orderShopId);
+        assert shopEntity.getStatus().equals(OrderStatus.PAY): "Order already paid.";
+        shopEntity.setStatus(OrderStatus.CANCELED);
+        shopRepository.save(shopEntity);
     }
 
     public static void deleteOrderShop(Long orderShopId) {
@@ -158,15 +142,14 @@ public class OrderService {
         shopRepository.delete(shopEntity);
     }
 
-    public static List<OrderUserEntity> getOrderUser(Long user, Boolean canceled) {
-        return userRepository.findByUserAndPaidAndCanceled(user, false, canceled);
-    }
-
     public static List<OrderShopEntity> getOrderUser(Long user, OrderStatus status) {
         List<OrderUserEntity> userEntities = userRepository.findByUser(user);
         List<OrderShopEntity> shopEntities = new ArrayList<>();
         for (OrderUserEntity userEntity: userEntities) {
-            shopEntities.addAll(shopRepository.findByOrderUserAndStatus(userEntity.getId(), status));
+            if (status != null)
+                shopEntities.addAll(shopRepository.findByOrderUserAndStatus(userEntity.getId(), status));
+            else
+                shopEntities.addAll(shopRepository.findByOrderUser(userEntity.getId()));
         }
         return shopEntities;
     }
