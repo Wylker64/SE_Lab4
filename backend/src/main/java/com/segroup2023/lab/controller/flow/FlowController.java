@@ -31,7 +31,7 @@ public class FlowController {
 
     @GetMapping("/get")
     public ResponseEntity<List<FlowEntity>> getFlow(@RequestParam("account_id") Long accountId, @RequestParam("page_num") int pageNum, @RequestParam("select") int select) {
-        List<FlowEntity> entities = flowService.getFlow(accountId, pageNum, select);
+        List<FlowEntity> entities = flowService.getFlow(accountId, select);
         return ResponseEntity.ok(entities);
     }
 
