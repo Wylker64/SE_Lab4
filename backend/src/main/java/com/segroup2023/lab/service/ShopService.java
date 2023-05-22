@@ -123,4 +123,11 @@ public class ShopService {
         return AccountService.findById(shop.getAccount());
     }
 
+    public static void updateSalesInfo(Long shopId, Long volume, Double amount) {
+        Shop shop = findById(shopId);
+        shop.setSalesVolume(shop.getSalesVolume() + volume);
+        shop.setSalesAmount(shop.getSalesAmount() + amount);
+        shopRepository.save(shop);
+    }
+
 }

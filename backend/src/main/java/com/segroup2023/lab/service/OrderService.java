@@ -107,6 +107,12 @@ public class OrderService {
         AccountService.shopProfit(shopEntity.getShop(), (1-0.05) * cost);
         shopEntity.setStatus(OrderStatus.DONE);
         shopRepository.save(shopEntity);
+        Long volume = 0L;
+        List<OrderItemEntity> itemEntities = itemRepository.findByOrderShop(orderShopId);
+        for (OrderItemEntity itemEntity: itemEntities) {
+            volume += itemEntity.getCount();
+        }
+        ShopService.updateSalesInfo(shopEntity.getShop(), volume, cost);
     }
 
     public static void applyRefund(Long orderShopId) {

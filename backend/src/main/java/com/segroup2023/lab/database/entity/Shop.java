@@ -36,6 +36,8 @@ public class Shop implements Serializable {
     @ManyToOne
     @JoinColumn(name = "activity")
     private Activity appliedActivity;
+    @Getter @Setter
+    private Double salesVolume, salesAmount;
 
     public Shop(User user, String name,
                 String type, String idCard,
