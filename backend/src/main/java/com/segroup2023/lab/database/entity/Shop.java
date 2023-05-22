@@ -34,6 +34,7 @@ public class Shop implements Serializable {
     private boolean deleting;
 
     @ManyToOne
+    @JoinColumn(name = "activity")
     private Activity appliedActivity;
 
     public Shop(User user, String name,

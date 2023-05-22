@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user")
@@ -38,6 +39,7 @@ public class User implements Serializable {
         this.identity = identity;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
@@ -46,5 +48,9 @@ public class User implements Serializable {
         return id.equals(((User)obj).id);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, identity, username, phone, idCard, email, password);
+    }
 }
 

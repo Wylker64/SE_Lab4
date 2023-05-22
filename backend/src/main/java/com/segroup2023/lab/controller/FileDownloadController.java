@@ -20,10 +20,6 @@ import java.io.InputStream;
 @Slf4j
 @Controller
 public class FileDownloadController {
-    private static class Request{
-        @NotNull
-        public String path;
-    }
     @GetMapping("/file/product/img/{file}")
     public void download(HttpServletResponse response, @PathVariable String file) {
         String root = FileSaver.getRootPath();

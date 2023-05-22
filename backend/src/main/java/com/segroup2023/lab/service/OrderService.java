@@ -8,6 +8,7 @@ import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import com.segroup2023.lab.utils.ApplyStatus;
 import com.segroup2023.lab.utils.OrderStatus;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class OrderService {
     private static OrderShopRepository shopRepository;
     private static OrderUserRepository userRepository;
 
+    @AllArgsConstructor
     public static class OrderItemRequest {
         @NotNull
         @Getter @Setter

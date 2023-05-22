@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Date;
 import java.util.Set;
 
@@ -22,12 +19,14 @@ public class Activity {
     private Date endTime;
     private Double funds;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "activity_product_category", joinColumns = {@JoinColumn(name = "activity_id", referencedColumnName = "id")},
     inverseJoinColumns = {@JoinColumn(name = "product_category_id", referencedColumnName = "id")})
     @Getter @Setter
     private Set<ProductCategory> productCategories;
+    @Column(name = "full_x")
     private Double fullX;
+    @Column(name = "minus_y")
     private Double minusY;
     private Double registrationCapitalThreshold;
     private Double monthlySalesVolumeThreshold;
