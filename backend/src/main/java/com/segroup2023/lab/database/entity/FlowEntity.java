@@ -2,6 +2,9 @@ package com.segroup2023.lab.database.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,25 +17,34 @@ public class FlowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @Column(name = "from_account")
-    private String fromAccount;
+    private Long fromAccount;
 
     @Column(name = "to_account")
-    private String toAccount;
+    private Long toAccount;
 
     @Column(name = "amount")
     @Getter
     @Setter
-
     private BigDecimal amount;
 
-    @ Getter
-    @ Setter
+    @Getter
+    @Setter
     private String remarks;
+
+    @Getter
+    @Setter
+    private Long userId;
+
+    @Getter
+    @Setter
+    private LocalDate date;
 
     // constructors, getters, setters, and other methods
 
-    public FlowEntity(String fromAccount, String toAccount, BigDecimal amount, String remarks) {
+    public FlowEntity(Long fromAccount, Long toAccount, BigDecimal amount, String remarks) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;

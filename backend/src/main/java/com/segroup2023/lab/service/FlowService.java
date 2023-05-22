@@ -21,7 +21,7 @@ public class FlowService {
     private static FlowRepository flowRepository;
 
     //write according to FlowEntity
-    public static void addFlow(String fromAccount, String toAccount, BigDecimal amount, String remark)
+    public static void addFlow(Long fromAccount, Long toAccount, BigDecimal amount, String remark)
     {
         FlowEntity flowEntity = flowRepository.findByFromAccountAndToAccount(fromAccount, toAccount);
         if (flowEntity == null)
@@ -35,7 +35,7 @@ public class FlowService {
         }
     }
 
-    public static List<FlowEntity> getFlow(Long userId, int pageNum, int select)
+    public static List<FlowEntity> getFlow(Long userId, int select)
     {
         // Implement the logic to filter the flow records based on select (0: all flows, 1: last month, 2: last week)
 
@@ -51,15 +51,13 @@ public class FlowService {
             default:
                 startDate = null;
         }
-        //calculate the offset and limit for pages
-        int offset = (pageNum - 1) * 10;
-        int pageSize = 10;
+
 
         List <FlowEntity> flowEntities;
         if (startDate == null) {
-            flowEntities = flowRepository.findByUserId(userId, offset, pageSize);
+            flowEntities = flowRepository.findByUserId(userId);
         } else {
-            flowEntities = flowRepository.findByUserIdAndDate(userId, startDate, endDate, offset, pageSize);
+            flowEntities = flowRepository.findFlowsByUserIdAndDate(userId, startDate, endDate);
         }
 
         return flowEntities;

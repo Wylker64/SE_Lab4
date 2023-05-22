@@ -31,12 +31,12 @@ public class FlowController {
 
     @GetMapping("/get")
     public ResponseEntity<List<FlowEntity>> getFlow(@RequestParam("account_id") Long accountId, @RequestParam("page_num") int pageNum, @RequestParam("select") int select) {
-        List<FlowEntity> entities = flowService.getFlow(accountId, pageNum, select);
+        List<FlowEntity> entities = flowService.getFlow(accountId, select);
         return ResponseEntity.ok(entities);
     }
 
     @PostMapping("/add")
-    public ResponseEntity addFlow(@RequestParam("from_account") String fromAccount, @RequestParam("to_account") String toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
+    public ResponseEntity addFlow(@RequestParam("from_account") Long fromAccount, @RequestParam("to_account") Long toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
 
         flowService.addFlow(fromAccount, toAccount, amount, remark);
         return ResponseEntity.ok().build();
