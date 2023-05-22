@@ -18,8 +18,6 @@ public interface FlowRepository extends JpaRepository<FlowEntity,Long> {
 
     FlowEntity findByUserIdAndProductId(Long userId, Long productId);
 
-    Object save(FlowEntity flowEntity);
-
     FlowEntity findByFromAccountAndToAccount(String fromAccount, String toAccount);
 
     List<FlowEntity> findByUserId(Long userId, int offset, int pageSize);
