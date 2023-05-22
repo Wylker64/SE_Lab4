@@ -40,7 +40,7 @@ public class OrderService {
 
     public static OrderUser order(Long userId, Long addressId, List<OrderItemRequest> items) {
         User user = UserService.getUser(userId);
-        Address address = AddressService.getAddress(addressId);
+        Address address = addressId < 0 ? null : AddressService.getAddress(addressId);
         Date time = new Date();
         List<OrderShop> orderShops = new ArrayList<>();
         double userOrderCost = 0.0;
@@ -91,6 +91,16 @@ public class OrderService {
         AccountService.transferToAdmin(shopEntity.getUser(), shopEntity.getCost());
         shopEntity.setStatus(OrderStatus.SEND);
         shopRepository.save(shopEntity);
+    }
+
+    public static void payUser(Long orderUserId) throws InsufficientBalanceException {
+        OrderUserEntity userEntity = getUserEntity(orderUserId);
+        AccountService.transferToAdmin(userEntity.getUser(), userEntity.getCost());
+        List<OrderShopEntity> shopEntities = findByOrderUser(orderUserId);
+        for (OrderShopEntity shopEntity: shopEntities) {
+            shopEntity.setStatus(OrderStatus.PAY);
+            shopRepository.save(shopEntity);
+        }
     }
 
     public static void send(Long orderShopId) {

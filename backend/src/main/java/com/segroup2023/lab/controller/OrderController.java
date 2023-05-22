@@ -97,11 +97,18 @@ public class OrderController {
         public Long order_id;
     }
 
-    @PostMapping("/pay")
-    public static void pay(@RequestBody @NotNull @Valid UpdateRequest request)
+    @PostMapping("/pay/shop")
+    public static void payShop(@RequestBody @NotNull @Valid UpdateRequest request)
             throws LoginFailureException, InsufficientBalanceException {
         User user = UserAuthorization.authorize(request.authorize);
         OrderService.pay(request.order_id);
+    }
+
+    @PostMapping("/pay/user")
+    public static void payUser(@RequestBody @NotNull @Valid UpdateRequest request)
+            throws LoginFailureException, InsufficientBalanceException {
+        User user = UserAuthorization.authorize(request.authorize);
+        OrderService.payUser(request.order_id);
     }
 
     @PostMapping("/send")
