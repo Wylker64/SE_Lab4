@@ -36,7 +36,7 @@ public class FlowController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addFlow(@RequestParam("from_account") String fromAccount, @RequestParam("to_account") String toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
+    public ResponseEntity addFlow(@RequestParam("from_account") Long fromAccount, @RequestParam("to_account") Long toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
 
         flowService.addFlow(fromAccount, toAccount, amount, remark);
         return ResponseEntity.ok().build();

@@ -44,7 +44,7 @@ public class FlowEntity {
 
     // constructors, getters, setters, and other methods
 
-    public FlowEntity(String fromAccount, String toAccount, BigDecimal amount, String remarks) {
+    public FlowEntity(Long fromAccount, Long toAccount, BigDecimal amount, String remarks) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;

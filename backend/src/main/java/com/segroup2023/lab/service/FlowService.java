@@ -21,7 +21,7 @@ public class FlowService {
     private static FlowRepository flowRepository;
 
     //write according to FlowEntity
-    public static void addFlow(String fromAccount, String toAccount, BigDecimal amount, String remark)
+    public static void addFlow(Long fromAccount, Long toAccount, BigDecimal amount, String remark)
     {
         FlowEntity flowEntity = flowRepository.findByFromAccountAndToAccount(fromAccount, toAccount);
         if (flowEntity == null)

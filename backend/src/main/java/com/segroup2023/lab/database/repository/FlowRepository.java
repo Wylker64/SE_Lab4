@@ -14,7 +14,7 @@ public interface FlowRepository extends JpaRepository<FlowEntity,Long> {
     // Logic to retrieve flow records related to merchants
 
 
-    FlowEntity findByFromAccountAndToAccount(String fromAccount, String toAccount);
+    FlowEntity findByFromAccountAndToAccount(Long fromAccount, Long toAccount);
     @Query("SELECT f FROM FlowEntity f WHERE f.userId = :userId AND f.date >= :startDate AND f.date <= :endDate")
     List<FlowEntity> findFlowsByUserIdAndDate(@Param("userId") Long userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
