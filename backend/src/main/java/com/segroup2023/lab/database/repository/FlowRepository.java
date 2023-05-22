@@ -3,9 +3,10 @@ package com.segroup2023.lab.database.repository;
 import java.time.LocalDate;
 import java.util.List;
 import com.segroup2023.lab.database.entity.FlowEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface FlowRepository {
+public interface FlowRepository extends JpaRepository<FlowEntity,Long> {
     // Logic to retrieve flow records related to merchants
 
     List<FlowEntity> findByMerchantId(Long merchantId);
@@ -17,7 +18,7 @@ public interface FlowRepository {
 
     FlowEntity findByUserIdAndProductId(Long userId, Long productId);
 
-    void save(FlowEntity flowEntity);
+    Object save(FlowEntity flowEntity);
 
     FlowEntity findByFromAccountAndToAccount(String fromAccount, String toAccount);
 
