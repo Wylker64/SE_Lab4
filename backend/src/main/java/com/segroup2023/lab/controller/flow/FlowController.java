@@ -1,5 +1,6 @@
 package com.segroup2023.lab.controller.flow;
 
+import com.segroup2023.lab.database.entity.Account;
 import com.segroup2023.lab.database.entity.FlowEntity;
 import org.springframework.web.bind.annotation.*;
 import com.segroup2023.lab.service.FlowService;
@@ -25,9 +26,9 @@ public class FlowController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity addFlow(@RequestParam("from_account") Long fromAccount, @RequestParam("to_account") Long toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
+    public ResponseEntity addFlow(@RequestParam("from_account") Account fromAccount, @RequestParam("to_account") Account toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
 
-        flowService.addFlow(fromAccount, toAccount, amount, remark);
+        flowService.addFlow(fromAccount, toAccount, amount);
         return ResponseEntity.ok().build();
     }
 

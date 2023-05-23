@@ -16,20 +16,24 @@ public class FlowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "from_account")
-    private Long fromAccount;
+    @ManyToOne
+    @JoinColumn(name = "from_account")
+    @Getter
+    @Setter
+    private Account fromAccount;
 
-    @Column(name = "to_account")
-    private Long toAccount;
+    @ManyToOne
+    @JoinColumn(name = "to_account")
+    @Getter
+    @Setter
+    private Account toAccount;
+
 
     @Column(name = "amount")
     @Getter
     @Setter
     private BigDecimal amount;
 
-    @Getter
-    @Setter
-    private String remarks;
 
     @Getter
     @Setter
@@ -41,11 +45,10 @@ public class FlowEntity {
 
     // constructors, getters, setters, and other methods
 
-    public FlowEntity(Long fromAccount, Long toAccount, BigDecimal amount, String remarks) {
+    public FlowEntity(Account fromAccount, Account toAccount, BigDecimal amount) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;
-        this.remarks = remarks;
     }
 
     public void increaseCount(BigDecimal count) {

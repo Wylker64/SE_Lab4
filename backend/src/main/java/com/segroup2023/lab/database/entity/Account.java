@@ -2,6 +2,7 @@ package com.segroup2023.lab.database.entity;
 
 import com.segroup2023.lab.exception.type.BadRequestException;
 import com.segroup2023.lab.exception.type.InsufficientBalanceException;
+import com.segroup2023.lab.service.FlowService;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "account")
@@ -47,5 +49,7 @@ public class Account implements Serializable {
             throw new InsufficientBalanceException(balance);
         balance -= amount;
         dst.balance += amount;
+
+        FlowService.addFlow(this,dst, new BigDecimal(amount));
     }
 }
