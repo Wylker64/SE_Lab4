@@ -2,6 +2,8 @@ package com.segroup2023.lab.database.repository;
 
 import java.util.Date;
 import java.util.List;
+
+import com.segroup2023.lab.database.entity.Account;
 import com.segroup2023.lab.database.entity.FlowEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +14,7 @@ public interface FlowRepository extends JpaRepository<FlowEntity,Long> {
     // Logic to retrieve flow records related to merchants
 
 
-    FlowEntity findByFromAccountAndToAccount(Long fromAccount, Long toAccount);
+    FlowEntity findByFromAccountAndToAccount(Account fromAccount, Account toAccount);
     @Query("SELECT f FROM FlowEntity f WHERE f.userId = :userId AND f.date >= :startDate AND f.date <= :endDate")
     List<FlowEntity> findFlowsByUserIdAndDate(@Param("userId") Long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 

@@ -1,5 +1,6 @@
 package com.segroup2023.lab.service;
 
+import com.segroup2023.lab.database.entity.Account;
 import com.segroup2023.lab.database.entity.FlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,12 @@ public class FlowService {
     private static FlowRepository flowRepository;
 
     //write according to FlowEntity
-    public static void addFlow(Long fromAccount, Long toAccount, BigDecimal amount, String remark)
+    public static void addFlow(Account fromAccount, Account toAccount, BigDecimal amount)
     {
         FlowEntity flowEntity = flowRepository.findByFromAccountAndToAccount(fromAccount, toAccount);
         if (flowEntity == null)
         {
-            flowRepository.save(new FlowEntity(fromAccount,toAccount,amount,remark));
+            flowRepository.save(new FlowEntity(fromAccount,toAccount,amount));
         }
         else
         {
