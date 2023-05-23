@@ -56,6 +56,7 @@ public class FlowEntity {
         this.amount = amount;
         this.srcOwner = srcOwner;
         this.dstOwner = dstOwner;
+        this.date=new Date();
     }
 
     public void increaseCount(BigDecimal count) {
