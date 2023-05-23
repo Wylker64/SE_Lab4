@@ -7,7 +7,6 @@ import com.segroup2023.lab.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,12 +24,6 @@ public class FlowController {
         return ResponseEntity.ok(entities);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addFlow(@RequestParam("from_account") Account fromAccount, @RequestParam("to_account") Account toAccount, @RequestParam("amount") BigDecimal amount, @RequestParam("remark") String remark) {
-
-        flowService.addFlow(fromAccount, toAccount, amount);
-        return ResponseEntity.ok().build();
-    }
 
 }
 

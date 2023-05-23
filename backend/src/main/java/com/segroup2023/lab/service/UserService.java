@@ -91,4 +91,15 @@ public class UserService {
         return optional.get();
     }
 
+    public static String getUserName(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isPresent()) {
+            return optionalUser.get().getUsername();
+        } else {
+            log.warn("User not found.");
+            return null;
+        }
+    }
+
+
 }
