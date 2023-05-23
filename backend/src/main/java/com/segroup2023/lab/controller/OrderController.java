@@ -68,7 +68,8 @@ public class OrderController {
         public UserAuthorization.Request authorize;
         @NotNull
         public Long shop_id;
-        public String order_status, refund_status;
+        @NotNull
+        public Boolean refund;
     }
 
     @PostMapping("/shop")
@@ -76,13 +77,12 @@ public class OrderController {
             throws LoginFailureException {
         User user = UserAuthorization.authorize(request.authorize);
         List<OrderShopEntity> entityList = null;
-        if (request.order_status != null) {
-            entityList = OrderService.getOrderShop(request.shop_id, OrderStatus.valueOf(request.order_status));
+        if (request.refund) {
+            entityList = OrderService.getOrderShop(request.shop_id, ApplyStatus.WAITING);
+        } else {
+            entityList = OrderService.getOrderShop(request.shop_id, OrderStatus.SEND);
+            entityList.addAll(OrderService.getOrderShop(request.shop_id, OrderStatus.RECEIVE));
         }
-        if (request.refund_status != null) {
-            entityList = OrderService.getOrderShop(request.shop_id, ApplyStatus.valueOf(request.refund_status));
-        }
-        assert entityList != null;
         List<OrderShop> orders = new ArrayList<>();
         for (OrderShopEntity entity: entityList) {
             orders.add(new OrderShop(entity));
