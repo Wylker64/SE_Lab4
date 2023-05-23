@@ -3,6 +3,7 @@ package com.segroup2023.lab.database.entity;
 import com.segroup2023.lab.exception.type.BadRequestException;
 import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import com.segroup2023.lab.service.FlowService;
+import com.segroup2023.lab.service.UserService;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,9 @@ public class Account implements Serializable {
         balance -= amount;
         dst.balance += amount;
 
-        FlowService.addFlow(this,dst, new BigDecimal(amount));
+        String srcOwner = UserService.getUserName(this.getOwner());
+        String dstOwner = UserService.getUserName(dst.getOwner());
+
+        FlowService.addFlow(this,srcOwner,dst,dstOwner, new BigDecimal(amount));
     }
 }

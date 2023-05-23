@@ -22,12 +22,17 @@ public class FlowEntity {
     @Setter
     private Account fromAccount;
 
+    @Getter
+    private String srcOwner;
+
     @ManyToOne
     @JoinColumn(name = "to_account")
     @Getter
     @Setter
     private Account toAccount;
 
+    @Getter
+    private String dstOwner;
 
     @Column(name = "amount")
     @Getter
@@ -45,10 +50,12 @@ public class FlowEntity {
 
     // constructors, getters, setters, and other methods
 
-    public FlowEntity(Account fromAccount, Account toAccount, BigDecimal amount) {
+    public FlowEntity(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;
+        this.srcOwner = srcOwner;
+        this.dstOwner = dstOwner;
     }
 
     public void increaseCount(BigDecimal count) {
