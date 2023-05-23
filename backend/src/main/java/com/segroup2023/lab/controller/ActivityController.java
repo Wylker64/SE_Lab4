@@ -45,7 +45,7 @@ public class ActivityController {
     }
 
     @GetMapping("/product_categories")
-    public List<ProductCategory> getProductCategories(@PathVariable Long id) {
+    public List<ProductCategory> getProductCategories() {
         return activityService.getAllProductCategories();
     }
 
