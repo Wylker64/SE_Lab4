@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.segroup2023.lab.service.UserAuthorization;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import com.segroup2023.lab.database.entity.User;
-import com.segroup2023.lab.exception.type.LoginFailureException;
 
 public class FlowFilterController {
     

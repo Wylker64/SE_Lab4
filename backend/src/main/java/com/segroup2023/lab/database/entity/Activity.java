@@ -32,6 +32,8 @@ public class Activity {
     private Double monthlySalesVolumeThreshold;
     private Double monthlySalesAmountThreshold;
 
+    @Getter @Setter
+    private double remainingFunds;      //剩余的补贴资金数
     //getters and setters
 
     public long getId() {

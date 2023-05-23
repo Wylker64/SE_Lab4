@@ -2,7 +2,6 @@ package com.segroup2023.lab.database.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.Getter;
@@ -40,7 +39,7 @@ public class FlowEntity {
 
     @Getter
     @Setter
-    private LocalDate date;
+    private Date date;
 
     // constructors, getters, setters, and other methods
 
