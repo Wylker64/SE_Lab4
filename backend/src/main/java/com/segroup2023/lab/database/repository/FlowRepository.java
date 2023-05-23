@@ -13,10 +13,11 @@ import org.springframework.data.repository.query.Param;
 public interface FlowRepository extends JpaRepository<FlowEntity,Long> {
     // Logic to retrieve flow records related to merchants
 
+    @Query("SELECT f FROM FlowEntity f WHERE f.fromAccount = :account OR f.toAccount = :account")
+    List<FlowEntity> findByFromAccountOrToAccount(@Param("account") Account account);
+
+    @Query("SELECT f FROM FlowEntity f WHERE (f.fromAccount = :account OR f.toAccount = :account) AND f.date BETWEEN :startDate AND :endDate")
+    List<FlowEntity> findByFromAccountOrToAccountAndDateBetween(@Param("account") Account account, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
     FlowEntity findByFromAccountAndToAccount(Account fromAccount, Account toAccount);
-    @Query("SELECT f FROM FlowEntity f WHERE f.userId = :userId AND f.date >= :startDate AND f.date <= :endDate")
-    List<FlowEntity> findFlowsByUserIdAndDate(@Param("userId") Long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
-
-    List<FlowEntity> findByUserId(Long userId);
 }

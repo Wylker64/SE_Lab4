@@ -23,6 +23,7 @@ public class FlowEntity {
     private Account fromAccount;
 
     @Getter
+    @Setter
     private String srcOwner;
 
     @ManyToOne
@@ -32,17 +33,13 @@ public class FlowEntity {
     private Account toAccount;
 
     @Getter
+    @Setter
     private String dstOwner;
 
-    @Column(name = "amount")
     @Getter
     @Setter
     private BigDecimal amount;
 
-
-    @Getter
-    @Setter
-    private Long userId;
 
     @Getter
     @Setter
