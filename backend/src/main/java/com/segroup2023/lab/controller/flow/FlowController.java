@@ -10,17 +10,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-//url:/api
-///flow
-//Request:account_id,page_num
-//	select//0：全部流水；1：近一个月；2：近一周
-//response:
-//	items[{
-//		roll_in
-//		roll_out
-//		amount
-//		type//0： 1：佣金
-//	}]
 @RestController
 @RequestMapping("/flow")
 public class FlowController {

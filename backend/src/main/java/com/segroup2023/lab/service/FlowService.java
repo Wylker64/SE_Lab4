@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.segroup2023.lab.database.repository.FlowRepository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
@@ -14,8 +13,7 @@ import java.util.Date;
 
 @ Service
 public class FlowService {
-    //商户与管理员可以查看与⾃⼰账户相关的流⽔记录，流⽔应按照账户划分，如商户有个⼈账户和商店账户，管理员有商城利润账户和中间账户。
-    //每条流⽔记录应包括必要信息，如转出⽅、转⼊⽅、⾦额、备注信息
+
     @Autowired
     private static FlowRepository flowRepository;
 
