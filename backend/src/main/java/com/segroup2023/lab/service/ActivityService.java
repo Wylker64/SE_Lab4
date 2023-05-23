@@ -93,4 +93,7 @@ public class ActivityService {
         return shopRepository.save(shop);
     }
 
+    public List<Activity> getAllActivities() {
+        return activityRepository.findAll();
+    }
 }

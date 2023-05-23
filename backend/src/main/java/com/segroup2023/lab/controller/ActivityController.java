@@ -25,6 +25,11 @@ public class ActivityController {
         return activityService.getActivity(id);
     }
 
+    @GetMapping
+    public List<Activity> getAllActivities() {
+        return activityService.getAllActivities();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Activity> updateActivity(@PathVariable Long id, @RequestBody Activity activity) {
         try {
