@@ -16,8 +16,6 @@ public class FlowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     @Column(name = "from_account")
     private Long fromAccount;
 

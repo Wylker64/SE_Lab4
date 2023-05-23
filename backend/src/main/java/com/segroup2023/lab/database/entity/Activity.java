@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "mall_activity")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date startTime;
