@@ -40,7 +40,7 @@ public class FlowEntity {
 
     @Getter
     @Setter
-    private LocalDate date;
+    private Date date;
 
     // constructors, getters, setters, and other methods
 
