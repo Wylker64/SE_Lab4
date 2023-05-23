@@ -120,7 +120,7 @@ public class OrderService {
             }
             userOrderDiscount += discount;
             userOrderCost += shopOrderCost;
-            orderShops.add(new OrderShop(null, orderItems, shop, shopOrderCost, discount, user, address, time, OrderStatus.PAY, ApplyStatus.WAITING));
+            orderShops.add(new OrderShop(null, orderItems, shop, shopOrderCost, discount, user, address, time, OrderStatus.PAY, null));
         }
         return new OrderUser(null, time, userOrderCost, userOrderDiscount, false, false, orderShops);
     }
@@ -157,7 +157,7 @@ public class OrderService {
         AccountService.transferToAdmin(userEntity.getUser(), userEntity.getCost());
         List<OrderShopEntity> shopEntities = findByOrderUser(orderUserId);
         for (OrderShopEntity shopEntity: shopEntities) {
-            shopEntity.setStatus(OrderStatus.PAY);
+            shopEntity.setStatus(OrderStatus.SEND);
             shopRepository.save(shopEntity);
         }
     }
