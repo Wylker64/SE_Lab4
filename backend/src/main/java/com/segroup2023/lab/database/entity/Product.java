@@ -1,5 +1,6 @@
 package com.segroup2023.lab.database.entity;
 
+import com.segroup2023.lab.service.ShopService;
 import com.segroup2023.lab.utils.ApplyStatus;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ public class Product implements Serializable {
     @Getter
     private final Long id, shopId, infoId;
     @Getter
-    private final String name, description;
+    private final String name, description, category;
     @Getter
     private final Double price;
     @Getter
@@ -26,6 +27,7 @@ public class Product implements Serializable {
         infoId = info.getId();
         name = info.getName();
         description = info.getDescription();
+        category = info.getCategory();
         price = info.getPrice();
         image_num = info.getImage_num();
         approved = entity.getCreateStatus().equals(ApplyStatus.APPROVED);
@@ -39,6 +41,10 @@ public class Product implements Serializable {
 
     public ProductEntity getProduct() {
         return this.entity;
+    }
+
+    public Shop getShop() {
+        return ShopService.findById(shopId);
     }
 
 }

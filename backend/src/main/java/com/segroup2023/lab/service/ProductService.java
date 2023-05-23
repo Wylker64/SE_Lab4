@@ -1,9 +1,7 @@
 package com.segroup2023.lab.service;
 
-import com.segroup2023.lab.database.entity.Product;
-import com.segroup2023.lab.database.entity.ProductEntity;
-import com.segroup2023.lab.database.entity.ProductInfo;
-import com.segroup2023.lab.database.entity.User;
+import com.segroup2023.lab.database.entity.*;
+import com.segroup2023.lab.database.repository.ProductCategoryRepository;
 import com.segroup2023.lab.database.repository.ProductInfoRepository;
 import com.segroup2023.lab.database.repository.ProductRepository;
 import com.segroup2023.lab.utils.FileSaver;
@@ -24,13 +22,16 @@ import java.util.Optional;
 public class ProductService {
     private static ProductRepository productRepository;
     private static ProductInfoRepository infoRepository;
+    private static ProductCategoryRepository categoryRepository;
     private static final int pageSize = 8;
     private static final String imageDir = "/product/img";
 
     @Autowired
-    private ProductService(ProductRepository productRepository, ProductInfoRepository infoRepository) {
+    private ProductService(ProductRepository productRepository, ProductInfoRepository infoRepository,
+                           ProductCategoryRepository categoryRepository) {
         ProductService.productRepository = productRepository;
         ProductService.infoRepository = infoRepository;
+        ProductService.categoryRepository = categoryRepository;
     }
 
     public static Page<Product> getProducts(int pageNum, Long shopId, User.Identity access) {
@@ -58,10 +59,11 @@ public class ProductService {
         return PageConverter.listToPage(records, pageRequest);
     }
 
-    public static void create(Long shopId, String name, String description, Double price, List<MultipartFile> images) {
+    public static void create(Long shopId, String name, String description, String category, Double price, List<MultipartFile> images) {
         ProductEntity productEntity = new ProductEntity(shopId);
         productRepository.save(productEntity);
-        ProductInfo info = new ProductInfo(productEntity.getId(), name, description, price, images.size(), ApplyStatus.WAITING, null, true);
+        ProductInfo info = new ProductInfo(null, productEntity.getId(), name, description, category, price,
+                images.size(), ApplyStatus.WAITING, null, true);
         infoRepository.save(info);
         for (int i = 0; i < images.size(); i++) {
             FileSaver.save(imageDir, info.getId() + "-" + i + ".png", images.get(i));
@@ -86,10 +88,11 @@ public class ProductService {
         }
         infoRepository.save(info);
         productRepository.save(productEntity);
+        saveCategory(info);
     }
 
-    public static void modify(Long productId, String name, String description, Double price, MultipartFile[] images) {
-        ProductInfo info = new ProductInfo(productId, name, description, price, images.length, null, ApplyStatus.WAITING, false);
+    public static void modify(Long productId, String name, String description, String category, Double price, MultipartFile[] images) {
+        ProductInfo info = new ProductInfo(null, productId, name, description, category, price, images.length, null, ApplyStatus.WAITING, false);
         infoRepository.save(info);
         for (int i = 0; i < images.length; i++) {
             FileSaver.save(imageDir, info.getId() + "-" + i + ".png", images[i]);
@@ -114,6 +117,13 @@ public class ProductService {
         }
         infoRepository.save(before);
         infoRepository.save(after);
+        saveCategory(after);
+    }
+
+    private static void saveCategory(ProductInfo after) {
+        ProductCategory category = categoryRepository.findByName(after.getCategory());
+        if (category == null)
+            categoryRepository.save(new ProductCategory(null, after.getCategory()));
     }
 
     public static void delete(Long productId) {
