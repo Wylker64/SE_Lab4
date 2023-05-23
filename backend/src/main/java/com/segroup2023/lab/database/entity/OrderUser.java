@@ -18,7 +18,7 @@ public class OrderUser {
     @Getter
     private final Date time;
     @Getter
-    private final Double cost;
+    private final Double cost, discount;
     @Getter
     private final Boolean paid, deleted;
     @Getter
@@ -28,6 +28,7 @@ public class OrderUser {
         id = entity.getId();
         time = entity.getTime();
         cost = entity.getCost();
+        discount = entity.getDiscount();
         paid = entity.getPaid();
         deleted = entity.getCanceled();
         orders = new ArrayList<>();

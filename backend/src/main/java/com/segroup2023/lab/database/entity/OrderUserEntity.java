@@ -22,7 +22,7 @@ public class OrderUserEntity {
     @Getter @Setter
     private Date time;
     @Getter @Setter
-    private Double cost;
+    private Double cost, discount;
     @Getter @Setter
     private Boolean paid, canceled;
 

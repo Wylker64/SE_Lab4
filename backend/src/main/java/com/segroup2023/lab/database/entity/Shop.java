@@ -59,6 +59,11 @@ public class Shop implements Serializable {
         return appliedActivity;
     }
     public void setAppliedActivity(Activity appliedActivity) {
-        this.appliedActivity = appliedActivity;
+        Date now = new Date();
+        if (now.after(appliedActivity.getEndTime())) {
+            this.appliedActivity = null;
+        } else {
+            this.appliedActivity = appliedActivity;
+        }
     }
 }

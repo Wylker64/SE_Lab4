@@ -40,8 +40,10 @@ public class ActivityService {
         return activityRepository.save(activity);
     }
 
-    public Optional <Activity> getActivity(Long id) {
-        return activityRepository.findById(id);
+    public Activity getActivity(Long id) {
+        Optional<Activity> optional = activityRepository.findById(id);
+        assert optional.isPresent():"Activity not found.";
+        return optional.get();
     }
 
     public Activity updateActivity(Long id,Activity updatedActivity) {

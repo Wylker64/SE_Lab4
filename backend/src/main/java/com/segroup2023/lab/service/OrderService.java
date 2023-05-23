@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Slf4j
@@ -23,19 +24,26 @@ public class OrderService {
     private static OrderItemRepository itemRepository;
     private static OrderShopRepository shopRepository;
     private static OrderUserRepository userRepository;
+    private static ActivityService activityService;
 
     @AllArgsConstructor
     public static class OrderItemRequest {
         @NotNull
         @Getter @Setter
         private Long product_id, count;
+
+        public Product getProduct() {
+            return ProductService.getProduct(product_id);
+        }
     }
 
     @Autowired
-    private OrderService(OrderItemRepository itemRepository, OrderShopRepository shopRepository, OrderUserRepository userRepository) {
+    private OrderService(OrderItemRepository itemRepository, OrderShopRepository shopRepository,
+                         OrderUserRepository userRepository, ActivityService activityService) {
         OrderService.itemRepository = itemRepository;
         OrderService.shopRepository = shopRepository;
         OrderService.userRepository = userRepository;
+        OrderService.activityService = activityService;
     }
 
     public static OrderUser order(Long userId, Long addressId, List<OrderItemRequest> items) {
@@ -44,36 +52,87 @@ public class OrderService {
         Date time = new Date();
         List<OrderShop> orderShops = new ArrayList<>();
         double userOrderCost = 0.0;
+        double userOrderDiscount = 0.0;
         Set<Long> shops = new HashSet<>();
+        List<Long> activityIndex = new ArrayList<>();
+        List<Double> totalActivityCost = new ArrayList<>();
+        List<Integer> lastItemIndex = new ArrayList<>();
         for (OrderItemRequest item: items) {
-            shops.add(ProductService.getProduct(item.getProduct_id()).getShopId());
+            Product product = item.getProduct();
+            shops.add(product.getShopId());
+            Activity activity = item.getProduct().getShop().getAppliedActivity();
+            if (activity != null && activity.containsCategory(product.getCategory())) {
+                Double cost = item.getCount() * product.getPrice();
+                if (activityIndex.contains(activity.getId())) {
+                    int index = activityIndex.indexOf(activity.getId());
+                    totalActivityCost.set(index, totalActivityCost.get(index) + cost);
+                    lastItemIndex.set(index, items.indexOf(item));
+                } else {
+                    activityIndex.add(activity.getId());
+                    totalActivityCost.add(cost);
+                    lastItemIndex.add(items.indexOf(item));
+                }
+            }
         }
+        List<Double> totalDiscount = new ArrayList<>();
+        for (int i = 0; i < activityIndex.size(); ++i) {
+            Activity activity = activityService.getActivity(activityIndex.get(i));
+            if (totalActivityCost.get(i) >= activity.getFullX() && activity.hasSufficientFund()) {
+                totalDiscount.add(activity.getFullX());
+            } else {
+                totalDiscount.add(0.0);
+            }
+        }
+        List<Double> remainingDiscount = new ArrayList<>(totalDiscount);
         for (Long shopId: shops) {
             Shop shop = ShopService.findById(shopId);
             List<OrderItem> orderItems = new ArrayList<>();
             double shopOrderCost = 0.0;
+            double shopDiscountCost = 0.0;
+            boolean lastActivityShop = false;
             for (OrderItemRequest itemRequest: items) {
-                Product product = ProductService.getProduct(itemRequest.getProduct_id());
+                Product product = itemRequest.getProduct();
                 if (product.getShopId().equals(shopId)) {
                     double cost = product.getPrice() * itemRequest.getCount();
                     shopOrderCost += cost;
                     orderItems.add(new OrderItem(null, product, itemRequest.getCount(), cost));
+                    Activity activity = product.getShop().getAppliedActivity();
+                    if (activity != null && activity.containsCategory(product.getCategory())) {
+                        shopDiscountCost += cost;
+                        if (lastItemIndex.get(activityIndex.indexOf(activity.getId())).equals(items.indexOf(itemRequest))) {
+                            lastActivityShop = true;
+                        }
+                    }
                 }
             }
+            Double discount = 0.0;
+            if (shopDiscountCost != 0.0) {
+                Activity activity = shop.getAppliedActivity();
+                assert activity != null;
+                int index = activityIndex.indexOf(activity.getId());
+                if (lastActivityShop) {
+                    discount = remainingDiscount.get(index);
+                } else {
+                    discount = Double.valueOf(new DecimalFormat("#.00").format(
+                            totalDiscount.get(index) * shopDiscountCost / totalActivityCost.get(index)));
+                }
+                remainingDiscount.set(index, remainingDiscount.get(index) - discount);
+            }
+            userOrderDiscount += discount;
             userOrderCost += shopOrderCost;
-            orderShops.add(new OrderShop(null, orderItems, shop, shopOrderCost, user, address, time, OrderStatus.PAY, ApplyStatus.WAITING));
+            orderShops.add(new OrderShop(null, orderItems, shop, shopOrderCost, discount, user, address, time, OrderStatus.PAY, ApplyStatus.WAITING));
         }
-        return new OrderUser(null, time, userOrderCost, false, false, orderShops);
+        return new OrderUser(null, time, userOrderCost, userOrderDiscount, false, false, orderShops);
     }
 
     public static Long save(OrderUser orderUser, Long userId, Long addressId) {
         OrderUserEntity userEntity = new OrderUserEntity(null, userId, addressId, orderUser.getTime(),
-                orderUser.getCost(), orderUser.getPaid(), orderUser.getDeleted());
+                orderUser.getCost(), orderUser.getDiscount(), orderUser.getPaid(), orderUser.getDeleted());
         userRepository.save(userEntity);
         orderUser.setId(userEntity.getId());
         for (OrderShop orderShop: orderUser.getOrders()) {
             OrderShopEntity shopEntity = new OrderShopEntity(null, userEntity.getId(), orderShop.getShop().getId(),
-                    orderShop.getCost(), orderShop.getStatus(), orderShop.getRefund());
+                    orderShop.getCost(), orderShop.getDiscount(), orderShop.getStatus(), orderShop.getRefund());
             shopRepository.save(shopEntity);
             orderShop.setId(shopEntity.getId());
             for (OrderItem orderItem: orderShop.getItems()) {

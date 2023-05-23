@@ -12,12 +12,14 @@ import java.util.Set;
 @Table(name = "mall_activity")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date startTime;
     private Date endTime;
     private Double funds;
+    @Getter @Setter
+    private Double remainingFunds;
 
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "activity_product_category", joinColumns = {@JoinColumn(name = "activity_id", referencedColumnName = "id")},
@@ -32,8 +34,18 @@ public class Activity {
     private Double monthlySalesVolumeThreshold;
     private Double monthlySalesAmountThreshold;
 
-    @Getter @Setter
-    private double remainingFunds;      //剩余的补贴资金数
+    public boolean containsCategory(String category) {
+        for (ProductCategory productCategory: productCategories) {
+            if (productCategory.getName().equals(category))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean hasSufficientFund() {
+        return remainingFunds >= minusY;
+    }
+
     //getters and setters
 
     public long getId() {

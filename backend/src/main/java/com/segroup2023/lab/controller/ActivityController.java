@@ -21,10 +21,8 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Activity> getActivity(@PathVariable Long id) {
-        return activityService.getActivity(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Activity getActivity(@PathVariable Long id) {
+        return activityService.getActivity(id);
     }
 
     @PutMapping("/{id}")

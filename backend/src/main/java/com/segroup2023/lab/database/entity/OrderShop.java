@@ -25,7 +25,7 @@ public class OrderShop {
     @Getter
     private final Shop shop;
     @Getter
-    private final Double cost;
+    private final Double cost, discount;
     @Getter
     private final User user;
     @Getter
@@ -46,8 +46,8 @@ public class OrderShop {
         }
         shop = ShopService.findById(entity.getShop());
         cost = entity.getCost();
+        discount = entity.getDiscount();
         OrderUserEntity userEntity = OrderService.getUserEntity(entity.getOrderUser());
-        assert userEntity != null;
         user = UserService.getUser(userEntity.getUser());
         address = AddressService.getAddress(userEntity.getAddress());
         time = userEntity.getTime();

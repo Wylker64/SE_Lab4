@@ -21,7 +21,7 @@ public class OrderShopEntity {
     @Getter @Setter
     private Long orderUser, shop;
     @Getter @Setter
-    private Double cost;
+    private Double cost, discount;
     @Getter @Setter
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
