@@ -40,7 +40,7 @@ public class ModifyController {
         public Double price;
         @NotNull
         @Setter
-        public String name, description;
+        public String name, description, category;
         @NotNull
         @Setter
         public MultipartFile[] images;
@@ -78,7 +78,7 @@ public class ModifyController {
         User user = UserAuthorization.authorize(authorize);
         if(!ShopService.belongTo(user.getId(), ProductService.getShopId(request.product_id)))
             throw new BadRequestException("Product does not belong to user.");
-        ProductService.modify(request.product_id, request.name, request.description, request.price, request.images);
+        ProductService.modify(request.product_id, request.name, request.description, request.category, request.price, request.images);
     }
 
     @PostMapping("/review")

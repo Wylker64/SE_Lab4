@@ -37,7 +37,7 @@ public class CreateController {
         public Double price;
         @NotNull
         @Setter
-        public String description, name;
+        public String description, name, category;
         @NotNull
         @Setter
         public List<MultipartFile> images;
@@ -75,7 +75,7 @@ public class CreateController {
         User user = UserAuthorization.authorize(authorize);
         if(!ShopService.belongTo(user.getId(), request.shop_id))
             throw new BadRequestException("Shop does not belong to user.");
-        ProductService.create(request.shop_id, request.name, request.description, request.price, request.images);
+        ProductService.create(request.shop_id, request.name, request.description, request.category, request.price, request.images);
     }
 
     @PostMapping("/review")
