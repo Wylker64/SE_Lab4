@@ -17,9 +17,13 @@ import java.util.Date;
 @ Service
 public class FlowService {
 
-    @Autowired
     private static FlowRepository flowRepository;
     private static AccountRepository accountRepository;
+
+    @Autowired
+    private FlowService(FlowRepository flowRepository) {
+        FlowService.flowRepository = flowRepository;
+    }
 
     //write according to FlowEntity
     public static void addFlow(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount)
