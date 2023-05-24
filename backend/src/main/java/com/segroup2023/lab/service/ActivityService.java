@@ -17,12 +17,6 @@ import java.util.Optional;
 import java.util.List;
 
 
-//管理员开启商城补贴活动，需要预设：
-//活动持续的时间
-//参加活动的商品类别（list）
-//⽤于活动的资⾦数量
-//活动规则，规则设置为满x减y
-//参加商家的注册资⾦、⽉销量、⽉销售额等阈值信息，⾃⾏设置
 
 @ Service
 public class ActivityService {
@@ -126,5 +120,9 @@ public class ActivityService {
 
     public List<Activity> getAllActivities() {
         return activityRepository.findAll();
+    }
+
+    public List<Shop> getAllPendingApplication() {
+        return shopRepository.findByAppliedActivityIsNotNullAndApprovedActivityIsNull();
     }
 }

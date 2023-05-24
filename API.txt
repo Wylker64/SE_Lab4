@@ -251,3 +251,7 @@ request type:GET
 response:
 	Activity类
 	
+8.获取指定ID的活动
+/activity/{id}
+response:
+	Activity类

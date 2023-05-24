@@ -22,6 +22,11 @@ public class ActivityController {
         return activityService.createActivity(activity);
     }
 
+    @GetMapping("/application")
+    public List<Shop> getAllPendingApplication() {
+        return activityService.getAllPendingApplication();
+    }
+
     @GetMapping("/{id}")
     public Activity getActivity(@PathVariable Long id) {
         return activityService.getActivity(id);
