@@ -73,5 +73,9 @@ public class ActivityController {
         return activityService.approveApplication(shopId);
     }
 
+    @PostMapping("/shops/{shopId}/deny")
+    public Shop denyApplication(@PathVariable Long shopId) {
+        return activityService.denyApplication(shopId);
+    }
 
 }

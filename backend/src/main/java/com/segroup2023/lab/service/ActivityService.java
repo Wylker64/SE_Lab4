@@ -113,7 +113,33 @@ public class ActivityService {
     {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new IllegalArgumentException("Shop not found with id " + shopId));
+        // Check if the shop has applied for an activity
+        Activity activity = shop.getAppliedActivity();
+        if (activity == null) {
+            throw new IllegalArgumentException("Shop with id " + shopId + " has not applied for any activity");
+        }
+        // Check if the shop has already been approved for an activity
+        if (shop.getApprovedActivity() != null) {
+            throw new IllegalArgumentException("Shop with id " + shopId + " has already been approved for an activity");
+        }
+
         shop.setApproved(true);
+
+        return shopRepository.save(shop);
+    }
+
+    public Shop denyApplication(Long shopId)
+    {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Shop not found with id " + shopId));
+        // Check if the shop has applied for an activity
+        Activity activity = shop.getAppliedActivity();
+        if (activity == null) {
+            throw new IllegalArgumentException("Shop with id " + shopId + " has not applied for any activity");
+        }
+
+        //Clear the applied activity
+        shop.setAppliedActivity(null);
 
         return shopRepository.save(shop);
     }
