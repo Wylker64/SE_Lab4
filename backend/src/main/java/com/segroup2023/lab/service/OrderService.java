@@ -60,7 +60,7 @@ public class OrderService {
         for (OrderItemRequest item: items) {
             Product product = item.getProduct();
             shops.add(product.getShopId());
-            Activity activity = item.getProduct().getShop().getAppliedActivity();
+            Activity activity = item.getProduct().getShop().getCurrentActivity();
             if (activity != null && activity.containsCategory(product.getCategory())) {
                 Double cost = item.getCount() * product.getPrice();
                 if (activityIndex.contains(activity.getId())) {
@@ -96,7 +96,7 @@ public class OrderService {
                     double cost = product.getPrice() * itemRequest.getCount();
                     shopOrderCost += cost;
                     orderItems.add(new OrderItem(null, product, itemRequest.getCount(), cost));
-                    Activity activity = product.getShop().getAppliedActivity();
+                    Activity activity = product.getShop().getCurrentActivity();
                     if (activity != null && activity.containsCategory(product.getCategory())) {
                         shopDiscountCost += cost;
                         if (lastItemIndex.get(activityIndex.indexOf(activity.getId())).equals(items.indexOf(itemRequest))) {
@@ -107,7 +107,7 @@ public class OrderService {
             }
             Double discount = 0.0;
             if (shopDiscountCost != 0.0) {
-                Activity activity = shop.getAppliedActivity();
+                Activity activity = shop.getCurrentActivity();
                 assert activity != null;
                 int index = activityIndex.indexOf(activity.getId());
                 if (lastActivityShop) {
