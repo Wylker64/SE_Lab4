@@ -1,5 +1,6 @@
 package com.segroup2023.lab.database.repository;
 
+import com.segroup2023.lab.database.entity.Activity;
 import com.segroup2023.lab.database.entity.Shop;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +15,6 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Page<Shop> findByApproved(Pageable pageable, boolean approved);
     Page<Shop> findByDeleting(Pageable pageable, boolean deleting);
     Page<Shop> findByOwner(Pageable pageable, Long owner);
+
+    List<Shop> findByAppliedActivity(Activity activity);
 }

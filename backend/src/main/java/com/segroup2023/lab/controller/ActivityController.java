@@ -3,6 +3,8 @@ package com.segroup2023.lab.controller;
 import com.segroup2023.lab.database.entity.Activity;
 import com.segroup2023.lab.database.entity.ProductCategory;
 import com.segroup2023.lab.database.entity.Shop;
+import com.segroup2023.lab.exception.type.BadRequestException;
+import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import com.segroup2023.lab.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,7 @@ public class ActivityController {
     private ActivityService activityService;
 
     @PostMapping
-    public Activity createActivity(@RequestBody Activity activity) {
+    public Activity createActivity(@RequestBody Activity activity) throws InsufficientBalanceException, BadRequestException {
         return activityService.createActivity(activity);
     }
 
@@ -25,7 +27,7 @@ public class ActivityController {
         return activityService.getActivity(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Activity> getAllActivities() {
         return activityService.getAllActivities();
     }
@@ -40,12 +42,14 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteActivity(@PathVariable Long id) {
+    public ResponseEntity<Activity> deleteActivity(@PathVariable Long id) {
         try {
             activityService.deleteActivity(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
         }
     }
 

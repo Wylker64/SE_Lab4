@@ -244,4 +244,10 @@ response:
 request type:POST
 response:
 	shop	//批准的shop
+
+7.获取所有活动
+/activity/all
+request type:GET
+response:
+	Activity类
 	

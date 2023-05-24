@@ -1,5 +1,6 @@
 package com.segroup2023.lab.service;
 
+import com.segroup2023.lab.database.entity.Account;
 import com.segroup2023.lab.database.entity.Activity;
 import com.segroup2023.lab.database.entity.ProductCategory;
 import com.segroup2023.lab.database.entity.Shop;
@@ -7,6 +8,8 @@ import com.segroup2023.lab.database.repository.ActivityRepository;
 import com.segroup2023.lab.database.repository.ProductCategoryRepository;
 import com.segroup2023.lab.database.repository.ProductRepository;
 import com.segroup2023.lab.database.repository.ShopRepository;
+import com.segroup2023.lab.exception.type.BadRequestException;
+import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +38,13 @@ public class ActivityService {
 
 
 
-    public Activity createActivity(Activity activity) {
+    public Activity createActivity(Activity activity) throws BadRequestException, InsufficientBalanceException {
+        Account adminAccount=AccountService.getAdminPersonal();
+        Double funds = activity.getFunds();
+        if (funds > adminAccount.getBalance()) {
+            throw new InsufficientBalanceException(adminAccount.getBalance());
+        }
+
 
         return activityRepository.save(activity);
     }
@@ -64,12 +73,34 @@ public class ActivityService {
 
     }
 
-    public void deleteActivity(Long id) {
-        if(activityRepository.existsById(id))
-            activityRepository.deleteById(id);
-        else
-            throw new IllegalArgumentException("Activity with id " + id  + "not found");
+    public void deleteActivity(Long id) throws BadRequestException {
+        Activity activity = activityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Activity with id " + id  + "not found"));
+
+        // Retrieve all shops that are participating in this activity
+
+        List<Shop> shops = shopRepository.findByAppliedActivity(activity);
+
+        // Set the appliedActivity of these shops to null
+        for (Shop shop : shops) {
+            shop.setAppliedActivity(null);
+            shopRepository.save(shop);
+        }
+
+        // Transfer remaining funds to profit account
+        double remainingFunds = activity.getRemainingFunds();
+        Account adminProfitAccount = AccountService.getAdminProfit();
+        try {
+            AccountService.charge(adminProfitAccount, remainingFunds);
+        }
+        catch (BadRequestException e) {
+            throw new RuntimeException("Failed to transfer remaining funds to profit account", e);
+        }
+
+        // Delete the activity
+        activityRepository.deleteById(id);
     }
+
 
     public List<ProductCategory> getAllProductCategories() {
         return productCategoryRepository.findAll();
