@@ -243,11 +243,13 @@ response:
 /activity/shops/{shopId}/approve
 request type:POST
 response:
-	shop	//批准的shop
+	shop	//批准的shop类
 
 * 新添加：拒绝申请活动
-/activity/shops/{shopId}deny
+/activity/shops/{shopId}/deny
 request type:POST
+response:
+	shop
 
 
 7.获取所有活动
