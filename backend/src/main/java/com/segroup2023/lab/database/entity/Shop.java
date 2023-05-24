@@ -34,8 +34,14 @@ public class Shop implements Serializable {
     private boolean deleting;
 
     @ManyToOne
-    @JoinColumn(name = "activity")
+    @JoinColumn(name = "applied_activity")
     private Activity appliedActivity;
+
+    @ManyToOne
+    @JoinColumn(name = "approved_activity")
+    @Getter @Setter
+    private Activity approvedActivity;
+
     @Getter @Setter
     private Double salesVolume, salesAmount;
 
@@ -65,5 +71,12 @@ public class Shop implements Serializable {
         } else {
             this.appliedActivity = appliedActivity;
         }
+    }
+
+    public Activity getApprovedActivity() {
+        return approvedActivity;
+    }
+    public void setApprovedActivity(Activity approvedActivity) {
+        this.approvedActivity = approvedActivity;
     }
 }

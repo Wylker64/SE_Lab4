@@ -22,9 +22,9 @@ public class ActivityController {
         return activityService.createActivity(activity);
     }
 
-    @GetMapping("/application")
-    public List<Shop> getAllPendingApplication() {
-        return activityService.getAllPendingApplication();
+    @GetMapping("/pending")
+    public List<Shop> getPendingActivity() {
+        return activityService.getPendingActivity();
     }
 
     @GetMapping("/{id}")

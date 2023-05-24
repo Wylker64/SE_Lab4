@@ -122,7 +122,8 @@ public class ActivityService {
         return activityRepository.findAll();
     }
 
-    public List<Shop> getAllPendingApplication() {
+    public List<Shop> getPendingActivity()
+    {
         return shopRepository.findByAppliedActivityIsNotNullAndApprovedActivityIsNull();
     }
 }
