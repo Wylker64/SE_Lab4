@@ -73,8 +73,15 @@ public class Shop implements Serializable {
         }
     }
 
-    public Activity getApprovedActivity() {
-        return approvedActivity;
+    public Activity getCurrentActivity() {
+        if (approvedActivity == null)
+            return null;
+        Date now = new Date();
+        if (now.after(approvedActivity.getEndTime())) {
+            return null;
+        } else {
+            return approvedActivity;
+        }
     }
     public void setApprovedActivity(Activity approvedActivity) {
         this.approvedActivity = approvedActivity;
