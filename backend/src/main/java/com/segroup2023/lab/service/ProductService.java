@@ -34,6 +34,11 @@ public class ProductService {
         ProductService.categoryRepository = categoryRepository;
     }
 
+    public static List<Product> getAvailableProducts(Long shopId) {
+        List<ProductEntity> productEntities = productRepository.findByShopIdAndCreateStatusAndDeleted(shopId, ApplyStatus.APPROVED, false);
+        return convertToProducts(productEntities);
+    }
+
     public static Page<Product> getProducts(int pageNum, Long shopId, User.Identity access) {
         List<ProductEntity> productEntities;
         if(access.equals(User.Identity.VENDOR)) {
@@ -41,12 +46,16 @@ public class ProductService {
             productEntities.addAll(productRepository.findByShopIdAndCreateStatusAndDeleted(shopId, ApplyStatus.WAITING, false));
         } else
             productEntities = productRepository.findByShopIdAndCreateStatusAndDeleted(shopId, ApplyStatus.APPROVED, false);
+        Pageable pageRequest = PageRequest.of(pageNum, pageSize);
+        return PageConverter.listToPage(convertToProducts(productEntities), pageRequest);
+    }
+
+    private static List<Product> convertToProducts(List<ProductEntity> productEntities) {
         List<Product> products = new ArrayList<>();
         for(ProductEntity productEntity : productEntities) {
             products.add(new Product(productEntity));
         }
-        Pageable pageRequest = PageRequest.of(pageNum, pageSize);
-        return PageConverter.listToPage(products, pageRequest);
+        return products;
     }
 
     public static Page<ProductInfo> getRecords(int pageNum, Long shopId) {
