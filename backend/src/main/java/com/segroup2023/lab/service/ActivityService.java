@@ -102,9 +102,15 @@ public class ActivityService {
                 .orElseThrow(() -> new IllegalArgumentException("Activity with id " + activityId + " not found"));
 
         List<String> shopProductCategories = ProductService.getShopProductCategories(shopId);
-        if(!shopProductCategories.contains(activity.getProductCategories()))
-        {
-            throw new IllegalArgumentException("Shop with id " + shopId + " does not sell " + activity.getProductCategories());
+        boolean isOverlap = false;
+        for (String shopCategory : shopProductCategories) {
+            if (activity.containsCategory(shopCategory)) {
+                isOverlap = true;
+                break;
+            }
+        }
+        if(!isOverlap){
+            throw new IllegalArgumentException("Shop with id " + shopId + " does not have any product categories that overlap with activity with id " + activityId);
         }
 
         return shopRepository.save(shop);
