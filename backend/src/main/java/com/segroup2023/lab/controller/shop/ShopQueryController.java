@@ -119,4 +119,9 @@ public class ShopQueryController {
         return response;
     }
 
+    @GetMapping("/shop/{id}/product_categories")
+    public List<String> getProductCategories(@PathVariable Long id) {
+        return ProductService.getShopProductCategories(id);
+    }
+
 }
