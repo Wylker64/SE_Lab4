@@ -26,18 +26,8 @@ public class FlowService {
     }
 
     //write according to FlowEntity
-    public static void addFlow(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount)
-    {
-        FlowEntity flowEntity = flowRepository.findByFromAccountAndToAccount(fromAccount, toAccount);
-        if (flowEntity == null)
-        {
-            flowRepository.save(new FlowEntity(fromAccount,srcOwner,toAccount,dstOwner,amount));
-        }
-        else
-        {
-            flowEntity.increaseCount(amount);
-            flowRepository.save(flowEntity);
-        }
+    public static void addFlow(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount) {
+        flowRepository.save(new FlowEntity(fromAccount,srcOwner,toAccount,dstOwner,amount));
     }
 
     public static List<FlowEntity> getFlow(Long accountId, int select)
