@@ -5,12 +5,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 
 @ Entity
 @ Table(name = "flow")
+@NoArgsConstructor
 public class FlowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
