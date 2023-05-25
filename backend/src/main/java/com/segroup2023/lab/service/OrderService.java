@@ -141,6 +141,9 @@ public class OrderService {
                 itemRepository.save(itemEntity);
                 orderItem.setId(itemEntity.getId());
             }
+            if (orderShop.getDiscount() > 0.0) {
+                activityService.lockFund(orderShop.getShop().getCurrentActivity(), orderShop.getDiscount());
+            }
         }
         return userEntity.getId();
     }

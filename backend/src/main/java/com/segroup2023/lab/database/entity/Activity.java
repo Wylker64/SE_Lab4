@@ -46,6 +46,13 @@ public class Activity {
         remainingFunds = funds;
     }
 
+    /**
+     * assert enough remaining funds.
+     */
+    public void decreaseRemainingFunds(Double amount) {
+        remainingFunds -= amount;
+    }
+
     public boolean hasSufficientFund() {
         return remainingFunds >= minusY;
     }

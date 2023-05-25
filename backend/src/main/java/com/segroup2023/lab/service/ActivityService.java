@@ -134,6 +134,11 @@ public class ActivityService {
         return shopRepository.save(shop);
     }
 
+    public void lockFund(Activity activity, Double amount) {
+        activity.decreaseRemainingFunds(amount);
+        activityRepository.save(activity);
+    }
+
     public Shop denyApplication(Long shopId)
     {
         Shop shop = shopRepository.findById(shopId)
