@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 
@@ -13,10 +14,16 @@ import java.util.Set;
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
+    @Getter
+    private String name;
 
+    @Getter
     private Date startTime;
+    @Getter
     private Date endTime;
+    @Getter
     private Double funds;
     @Getter @Setter
     private Double remainingFunds;
@@ -27,13 +34,33 @@ public class Activity {
     @Getter @Setter
     private Set<ProductCategory> productCategories;
     @Column(name = "full_x")
+    @Getter
     private Double fullX;
     @Column(name = "minus_y")
+    @Getter
     private Double minusY;
+    @Getter
     private Double registrationCapitalThreshold;
-    private Double monthlySalesVolumeThreshold;
+    @Getter
+    private Long monthlySalesVolumeThreshold;
+    @Getter
     private Double monthlySalesAmountThreshold;
 
+    public Activity(String name, Date startTime, Date endTime, Double funds, Set<ProductCategory> productCategories,
+                    Double fullX, Double minusY, Double registrationCapitalThreshold,
+                    Long monthlySalesVolumeThreshold, Double monthlySalesAmountThreshold) {
+        this.name = name;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.funds = funds;
+        this.productCategories = productCategories;
+        this.fullX = fullX;
+        this.minusY = minusY;
+        this.registrationCapitalThreshold = registrationCapitalThreshold;
+        this.monthlySalesVolumeThreshold = monthlySalesVolumeThreshold;
+        this.monthlySalesAmountThreshold = monthlySalesAmountThreshold;
+        remainingFunds = funds;
+    }
     public boolean containsCategory(String category) {
         for (ProductCategory productCategory: productCategories) {
             if (productCategory.getName().equals(category))
@@ -56,81 +83,4 @@ public class Activity {
     public boolean hasSufficientFund() {
         return remainingFunds >= minusY;
     }
-
-    //getters and setters
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Double getFunds() {
-        return funds;
-    }
-
-    public void setFunds(Double funds) {
-        this.funds = funds;
-    }
-
-    public Double getFullX() {
-        return fullX;
-    }
-
-    public void setFullX(Double fullX) {
-        this.fullX = fullX;
-    }
-
-    public Double getMinusY() {
-        return minusY;
-    }
-
-    public void setMinusY(Double minusY) {
-        this.minusY = minusY;
-    }
-
-    public Double getRegistrationCapitalThreshold() {
-        return registrationCapitalThreshold;
-    }
-
-    public void setRegistrationCapitalThreshold(Double registrationCapitalThreshold) {
-        this.registrationCapitalThreshold = registrationCapitalThreshold;
-    }
-
-    public Double getMonthlySalesVolumeThreshold() {
-        return monthlySalesVolumeThreshold;
-    }
-
-    public void setMonthlySalesVolumeThreshold(Double monthlySalesVolumeThreshold) {
-        this.monthlySalesVolumeThreshold = monthlySalesVolumeThreshold;
-    }
-
-    public Double getMonthlySalesAmountThreshold() {
-        return monthlySalesAmountThreshold;
-    }
-
-    public void setMonthlySalesAmountThreshold(Double monthlySalesAmountThreshold) {
-        this.monthlySalesAmountThreshold = monthlySalesAmountThreshold;
-    }
-
-
-
 }

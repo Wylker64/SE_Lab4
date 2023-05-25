@@ -10,10 +10,7 @@ import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.List;
-
+import java.util.*;
 
 
 @ Service
@@ -28,13 +25,17 @@ public class ActivityService {
     private ProductCategoryRepository productCategoryRepository;
 
 
-
-    /**
-     * @param activity used as request DTO
-     * */
-    public Activity createActivity(Activity activity) throws BadRequestException, InsufficientBalanceException {
-        AccountService.adminExpend(activity.getFunds());
-        activity.initialize();
+    public Activity createActivity(String name, Date startTime, Date endTime, Double funds, List<String> productCategories,
+                                   Double fullX, Double minusY, Double registrationCapitalThreshold,
+                                   Long monthlySalesVolumeThreshold, Double monthlySalesAmountThreshold)
+            throws InsufficientBalanceException {
+        AccountService.adminExpend(funds);
+        Set<ProductCategory> categories = new HashSet<>();
+        for (String product: productCategories) {
+            categories.add(productCategoryRepository.findByName(product));
+        }
+        Activity activity = new Activity(name, startTime, endTime, funds, categories, fullX, minusY, registrationCapitalThreshold,
+                monthlySalesVolumeThreshold, monthlySalesAmountThreshold);
         return activityRepository.save(activity);
     }
 
@@ -42,24 +43,6 @@ public class ActivityService {
         Optional<Activity> optional = activityRepository.findById(id);
         assert optional.isPresent():"Activity not found.";
         return optional.get();
-    }
-
-    public Activity updateActivity(Long id,Activity updatedActivity) {
-        return activityRepository.findById(id)
-                .map(activity -> {
-                    activity.setStartTime(updatedActivity.getStartTime());
-                    activity.setEndTime(updatedActivity.getEndTime());
-                    activity.setFunds(updatedActivity.getFunds());
-                    activity.setProductCategories(updatedActivity.getProductCategories());
-                    activity.setFullX(updatedActivity.getFullX());
-                    activity.setMinusY(updatedActivity.getMinusY());
-                    activity.setRegistrationCapitalThreshold(updatedActivity.getRegistrationCapitalThreshold());
-                    activity.setMonthlySalesVolumeThreshold(updatedActivity.getMonthlySalesVolumeThreshold());
-                    activity.setMonthlySalesAmountThreshold(updatedActivity.getMonthlySalesAmountThreshold());
-                    return activityRepository.save(activity);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found with id " + id));
-
     }
 
     public void deleteActivity(Long id) throws BadRequestException {

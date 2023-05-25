@@ -6,9 +6,12 @@ import com.segroup2023.lab.database.entity.Shop;
 import com.segroup2023.lab.exception.type.BadRequestException;
 import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import com.segroup2023.lab.service.ActivityService;
+import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -17,9 +20,24 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+    private static class CreateRequest {
+        public String name;
+        public Date startTime;
+        public Date endTime;
+        public Double funds;
+        public List<String> productCategories;
+        public Double fullX;
+        public Double minusY;
+        public Double registrationCapitalThreshold;
+        public Long monthlySalesVolumeThreshold;
+        public Double monthlySalesAmountThreshold;
+    }
+
     @PostMapping
-    public Activity createActivity(@RequestBody Activity activity) throws InsufficientBalanceException, BadRequestException {
-        return activityService.createActivity(activity);
+    public Activity createActivity(@RequestBody CreateRequest request) throws InsufficientBalanceException, BadRequestException {
+        return activityService.createActivity(request.name, request.startTime, request.endTime, request.funds, request.productCategories,
+                request.fullX, request.minusY, request.registrationCapitalThreshold, request.monthlySalesVolumeThreshold,
+                request.monthlySalesAmountThreshold);
     }
 
     @GetMapping("/pending")
@@ -35,15 +53,6 @@ public class ActivityController {
     @GetMapping("/all")
     public List<Activity> getAllActivities() {
         return activityService.getAllActivities();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateActivity(@PathVariable Long id, @RequestBody Activity activity) {
-        try {
-            return ResponseEntity.ok(activityService.updateActivity(id, activity));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @DeleteMapping("/{id}")
