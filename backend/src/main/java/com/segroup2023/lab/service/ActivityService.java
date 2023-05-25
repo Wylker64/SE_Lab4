@@ -1,9 +1,6 @@
 package com.segroup2023.lab.service;
 
-import com.segroup2023.lab.database.entity.Account;
-import com.segroup2023.lab.database.entity.Activity;
-import com.segroup2023.lab.database.entity.ProductCategory;
-import com.segroup2023.lab.database.entity.Shop;
+import com.segroup2023.lab.database.entity.*;
 import com.segroup2023.lab.database.repository.ActivityRepository;
 import com.segroup2023.lab.database.repository.ProductCategoryRepository;
 import com.segroup2023.lab.database.repository.ProductRepository;
@@ -13,6 +10,7 @@ import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 
@@ -103,7 +101,12 @@ public class ActivityService {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new IllegalArgumentException("Activity with id " + activityId + " not found"));
 
-        shop.setAppliedActivity(activity);
+        List<String> shopProductCategories = ProductService.getShopProductCategories(shopId);
+        if(!shopProductCategories.contains(activity.getProductCategories()))
+        {
+            throw new IllegalArgumentException("Shop with id " + shopId + " does not sell " + activity.getProductCategories());
+        }
+
         return shopRepository.save(shop);
     }
     public Shop approveApplication(Long shopId)
@@ -149,4 +152,6 @@ public class ActivityService {
     {
         return shopRepository.findByAppliedActivityIsNotNullAndApprovedActivityIsNull();
     }
+
+
 }

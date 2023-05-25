@@ -170,5 +170,17 @@ public class ProductService {
         return productOptional.orElse(null);
     }
 
+    public static List<String> getShopProductCategories(Long shopId)
+    {
+        List <Product> shopProducts = getAvailableProducts(shopId);
+        List <String> categories = new ArrayList<>();
+        for (Product product : shopProducts)
+        {
+            String category = product.getCategory();
+            if(!categories.contains(category))
+                categories.add(category);
+        }
+        return categories;
+    }
 
 }

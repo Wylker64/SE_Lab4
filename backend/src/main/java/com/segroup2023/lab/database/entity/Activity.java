@@ -124,4 +124,6 @@ public class Activity {
         this.monthlySalesAmountThreshold = monthlySalesAmountThreshold;
     }
 
+
+
 }
