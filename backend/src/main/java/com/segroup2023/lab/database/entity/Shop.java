@@ -39,11 +39,13 @@ public class Shop implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "approved_activity")
-    @Getter @Setter
+    @Getter
     private Activity approvedActivity;
 
     @Getter @Setter
-    private Double salesVolume, salesAmount;
+    private Double salesAmount;
+    @Getter @Setter
+    private Long salesVolume;
 
     public Shop(User user, String name,
                 String type, String idCard,
@@ -59,6 +61,8 @@ public class Shop implements Serializable {
         this.date = date;
         this.approved = false;
         this.deleting = false;
+        salesVolume = 0L;
+        salesAmount = 0.0;
     }
 
     public Activity getAppliedActivity() {
