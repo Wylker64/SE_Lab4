@@ -42,6 +42,10 @@ public class Activity {
         return false;
     }
 
+    public void initialize() {
+        remainingFunds = funds;
+    }
+
     public boolean hasSufficientFund() {
         return remainingFunds >= minusY;
     }

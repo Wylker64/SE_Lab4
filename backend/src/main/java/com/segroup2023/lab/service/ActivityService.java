@@ -31,15 +31,12 @@ public class ActivityService {
 
 
 
-
+    /**
+     * @param activity used as request DTO
+     * */
     public Activity createActivity(Activity activity) throws BadRequestException, InsufficientBalanceException {
-        Account adminAccount=AccountService.getAdminPersonal();
-        Double funds = activity.getFunds();
-        if (funds > adminAccount.getBalance()) {
-            throw new InsufficientBalanceException(adminAccount.getBalance());
-        }
-
-
+        AccountService.adminExpend(activity.getFunds());
+        activity.initialize();
         return activityRepository.save(activity);
     }
 

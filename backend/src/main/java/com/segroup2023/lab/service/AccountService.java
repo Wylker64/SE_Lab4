@@ -101,6 +101,10 @@ public class AccountService {
         }
     }
 
+    public static void adminExpend(Double amount) throws InsufficientBalanceException {
+            transfer(adminProfit, adminPersonal, amount);
+    }
+
     public static void shopProfit(Long shopId, Double amount) {
         Shop shop = ShopService.findById(shopId);
         Account shopAccount = getAccount(shop.getAccount());
