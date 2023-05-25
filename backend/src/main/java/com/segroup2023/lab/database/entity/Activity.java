@@ -2,6 +2,7 @@ package com.segroup2023.lab.database.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "mall_activity")
+@NoArgsConstructor
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
