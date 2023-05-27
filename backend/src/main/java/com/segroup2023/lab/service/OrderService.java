@@ -150,14 +150,14 @@ public class OrderService {
 
     public static void pay(Long orderShopId) throws InsufficientBalanceException {
         OrderShopEntity shopEntity = getShopEntity(orderShopId);
-        AccountService.transferToAdmin(shopEntity.getUser(), shopEntity.getCost());
+        AccountService.transferToAdmin(shopEntity.getUser(), shopEntity.getCost() - shopEntity.getDiscount());
         shopEntity.setStatus(OrderStatus.SEND);
         shopRepository.save(shopEntity);
     }
 
     public static void payUser(Long orderUserId) throws InsufficientBalanceException {
         OrderUserEntity userEntity = getUserEntity(orderUserId);
-        AccountService.transferToAdmin(userEntity.getUser(), userEntity.getCost());
+        AccountService.transferToAdmin(userEntity.getUser(), userEntity.getCost() - userEntity.getDiscount());
         List<OrderShopEntity> shopEntities = findByOrderUser(orderUserId);
         for (OrderShopEntity shopEntity: shopEntities) {
             shopEntity.setStatus(OrderStatus.SEND);
@@ -174,7 +174,7 @@ public class OrderService {
     public static void receive(Long orderShopId) {
         OrderShopEntity shopEntity = getShopEntity(orderShopId);
         assert shopEntity.getRefund() == ApplyStatus.NONE || shopEntity.getRefund() == ApplyStatus.DENIED;
-        Double cost = shopEntity.getCost();
+        Double cost = shopEntity.getCost() - shopEntity.getDiscount();
         AccountService.adminProfit(0.05 * cost);
         AccountService.shopProfit(shopEntity.getShop(), (1-0.05) * cost);
         shopEntity.setStatus(OrderStatus.DONE);
@@ -204,7 +204,7 @@ public class OrderService {
         shopEntity.setRefund(ApplyStatus.APPROVED);
         shopEntity.setStatus(OrderStatus.REFUNDED);
         shopRepository.save(shopEntity);
-        AccountService.undoTransferToAdmin(getUserEntity(shopEntity.getOrderUser()).getUser(), shopEntity.getCost());
+        AccountService.undoTransferToAdmin(getUserEntity(shopEntity.getOrderUser()).getUser(), shopEntity.getCost() - shopEntity.getDiscount());
     }
 
     public static void cancel(Long orderShopId) {
