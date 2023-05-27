@@ -95,7 +95,7 @@ public class ActivityService {
         if(!isOverlap){
             throw new IllegalArgumentException("Shop with id " + shopId + " does not have any product categories that overlap with activity id " + activityId);
         }
-
+        shop.setAppliedActivity(activity);
         return shopRepository.save(shop);
     }
     public Shop approveApplication(Long shopId)
