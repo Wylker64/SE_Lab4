@@ -112,7 +112,7 @@ public class ActivityService {
             throw new IllegalArgumentException("Shop with id " + shopId + " has already been approved for an activity");
         }
 
-        shop.setApproved(true);
+        shop.setAppliedActivity(null);
         shop.setApprovedActivity(activity);
 
         return shopRepository.save(shop);
