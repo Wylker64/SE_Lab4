@@ -19,7 +19,7 @@ public class FlowController {
     private FlowService flowService;
 
     @GetMapping("/get")
-    public ResponseEntity<List<FlowEntity>> getFlow(@RequestParam("account_id") Long accountId, @RequestParam("page_num") int pageNum, @RequestParam("select") int select) {
+    public ResponseEntity<List<FlowEntity>> getFlow(@RequestParam("account_id") Long accountId, @RequestParam("select") int select) {
         List<FlowEntity> entities = flowService.getFlow(accountId, select);
         return ResponseEntity.ok(entities);
     }
