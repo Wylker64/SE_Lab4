@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
-
+import java.util.concurrent.Flow;
 
 
 @ Service
@@ -21,8 +21,9 @@ public class FlowService {
     private static AccountRepository accountRepository;
 
     @Autowired
-    private FlowService(FlowRepository flowRepository) {
+    private FlowService(FlowRepository flowRepository, AccountRepository accountRepository) {
         FlowService.flowRepository = flowRepository;
+        FlowService.accountRepository = accountRepository;
     }
 
     //write according to FlowEntity
