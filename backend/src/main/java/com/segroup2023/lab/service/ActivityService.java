@@ -113,6 +113,7 @@ public class ActivityService {
         }
 
         shop.setApproved(true);
+        shop.setApprovedActivity(activity);
 
         return shopRepository.save(shop);
     }
