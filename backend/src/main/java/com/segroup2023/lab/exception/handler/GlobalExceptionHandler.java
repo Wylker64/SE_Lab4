@@ -53,7 +53,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleIllegalArgument(IllegalArgumentException e){
-        return e.getMessage();
+    public Map<String, String> IllegalArgumentException(IllegalArgumentException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+        return response;
     }
 }
