@@ -6,6 +6,7 @@ import com.segroup2023.lab.database.entity.Shop;
 import com.segroup2023.lab.exception.type.BadRequestException;
 import com.segroup2023.lab.exception.type.InsufficientBalanceException;
 import com.segroup2023.lab.service.ActivityService;
+import com.segroup2023.lab.service.ProductService;
 import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -85,6 +86,11 @@ public class ActivityController {
     @PostMapping("/shops/{shopId}/deny")
     public Shop denyApplication(@PathVariable Long shopId) {
         return activityService.denyApplication(shopId);
+    }
+
+    @GetMapping("/product/{id}")
+    public Activity getProductActivity(@PathVariable Long id) {
+        return ProductService.getActivity(id);
     }
 
 }

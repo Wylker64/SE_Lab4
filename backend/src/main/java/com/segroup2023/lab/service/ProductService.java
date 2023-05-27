@@ -141,6 +141,12 @@ public class ProductService {
         productRepository.save(entity);
     }
 
+    public static Activity getActivity(Long productId) {
+        ProductEntity entity = getEntity(productId);
+        Shop shop = ShopService.findById(entity.getShopId());
+        return shop.getCurrentActivity();
+    }
+
     private static ProductInfo getInfo(Long infoId) {
         Optional<ProductInfo> infoOptional = infoRepository.findById(infoId);
         return infoOptional.orElse(null);
