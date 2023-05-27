@@ -45,7 +45,7 @@ public class Account implements Serializable {
         balance += amount;
     }
 
-    public void transferTo(Account dst, Double amount) throws InsufficientBalanceException {
+    public void transferTo(Account dst, Double amount,String remark) throws InsufficientBalanceException {
         if(balance < amount)
             throw new InsufficientBalanceException(balance);
         balance -= amount;
@@ -54,6 +54,6 @@ public class Account implements Serializable {
         String srcOwner = UserService.getUserName(this.getOwner());
         String dstOwner = UserService.getUserName(dst.getOwner());
 
-        FlowService.addFlow(this,srcOwner,dst,dstOwner, new BigDecimal(amount));
+        FlowService.addFlow(this,srcOwner,dst,dstOwner, new BigDecimal(amount),remark);
     }
 }

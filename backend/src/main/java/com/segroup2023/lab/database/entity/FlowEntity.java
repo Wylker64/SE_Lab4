@@ -40,6 +40,11 @@ public class FlowEntity {
 
     @Getter
     @Setter
+    private String remark;      //备注信息，包含流水类型等
+
+
+    @Getter
+    @Setter
     private BigDecimal amount;
 
 
@@ -49,13 +54,14 @@ public class FlowEntity {
 
     // constructors, getters, setters, and other methods
 
-    public FlowEntity(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount) {
+    public FlowEntity(Account fromAccount,String srcOwner, Account toAccount,String dstOwner, BigDecimal amount, String remark) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;
         this.srcOwner = srcOwner;
         this.dstOwner = dstOwner;
         this.date=new Date();
+        this.remark = remark;
     }
 
     public void increaseCount(BigDecimal count) {
