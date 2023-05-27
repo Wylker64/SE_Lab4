@@ -267,5 +267,5 @@ response:
 /activity/pending
 request type:GET
 response:
-	Activity类
+	Shop List
 
