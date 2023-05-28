@@ -19,4 +19,5 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     List<Shop> findByAppliedActivity(Activity activity);
 
     List<Shop> findByAppliedActivityIsNotNullAndApprovedActivityIsNull();
+    List<Shop> findByApprovedActivityAndApprovedTrue(Activity approvedActivity);
 }

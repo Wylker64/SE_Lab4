@@ -7,6 +7,7 @@ import com.segroup2023.lab.database.repository.ProductRepository;
 import com.segroup2023.lab.database.repository.ShopRepository;
 import com.segroup2023.lab.exception.type.BadRequestException;
 import com.segroup2023.lab.exception.type.InsufficientBalanceException;
+import com.segroup2023.lab.utils.ApplyStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -137,6 +138,27 @@ public class ActivityService {
         shop.setAppliedActivity(null);
 
         return shopRepository.save(shop);
+    }
+
+    public List<Product> getActivityProducts(Long activityId) {
+        Activity activity = activityRepository.findById(activityId).orElseThrow();
+        Set<ProductCategory> categories = activity.getProductCategories();
+        Set<String> categoryNames = new HashSet<>();
+        for (ProductCategory category: categories) {
+            categoryNames.add(category.getName());
+        }
+        List<Shop> shops = shopRepository.findByApprovedActivityAndApprovedTrue(activity);
+        List<Product> products = new ArrayList<>();
+        for (Shop shop: shops) {
+            List<ProductEntity> shopProducts = productRepository.findByShopIdAndCreateStatusAndDeleted(shop.getId(), ApplyStatus.APPROVED, false);
+            for (ProductEntity productEntity: shopProducts) {
+                Product product = new Product(productEntity);
+                if (categoryNames.contains(product.getCategory())) {
+                    products.add(product);
+                }
+            }
+        }
+        return products;
     }
 
     public List<Activity> getAllActivities() {

@@ -1,6 +1,7 @@
 package com.segroup2023.lab.controller;
 
 import com.segroup2023.lab.database.entity.Activity;
+import com.segroup2023.lab.database.entity.Product;
 import com.segroup2023.lab.database.entity.ProductCategory;
 import com.segroup2023.lab.database.entity.Shop;
 import com.segroup2023.lab.exception.type.BadRequestException;
@@ -91,6 +92,11 @@ public class ActivityController {
     @GetMapping("/product/{id}")
     public Activity getProductActivity(@PathVariable Long id) {
         return ProductService.getActivity(id);
+    }
+
+    @GetMapping("/{id}/product")
+    public List<Product> getActivityProducts(@PathVariable Long id) {
+        return activityService.getActivityProducts(id);
     }
 
 }
