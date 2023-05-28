@@ -78,7 +78,7 @@ public class OrderService {
         for (int i = 0; i < activityIndex.size(); ++i) {
             Activity activity = activityService.getActivity(activityIndex.get(i));
             if (totalActivityCost.get(i) >= activity.getFullX() && activity.hasSufficientFund()) {
-                totalDiscount.add(activity.getFullX());
+                totalDiscount.add(activity.getMinusY());
             } else {
                 totalDiscount.add(0.0);
             }
