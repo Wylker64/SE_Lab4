@@ -85,6 +85,10 @@ public class ActivityService {
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new IllegalArgumentException("Activity with id " + activityId + " not found"));
 
+        if(shop.getAppliedActivity() != null){
+            throw new IllegalArgumentException("Shop with id " + shopId + " has already applied for an activity");
+        }
+
         List<String> shopProductCategories = ProductService.getShopProductCategories(shopId);
         boolean isOverlap = false;
         for (String shopCategory : shopProductCategories) {
