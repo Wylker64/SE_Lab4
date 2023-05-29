@@ -31,7 +31,7 @@ public class ShopService {
     public static void apply(User vendor, Shop shop)
             throws FieldConflictException, InsufficientBalanceException {
         checkConflict(shop);
-        AccountService.transferToAdmin(vendor.getId(), shop.getCapital());
+        AccountService.transferToAdmin(vendor.getId(), shop.getCapital(), "Registration capital.");
         shopRepository.save(shop);
     }
 
@@ -82,13 +82,13 @@ public class ShopService {
         if(shop.isApproved())
             throw new ItemNotFoundException("Unapproved Shop");
         if(!approved) {
-            AccountService.undoTransferToAdmin(user.getId(), shop.getCapital());
+            AccountService.undoTransferToAdmin(user.getId(), shop.getCapital(), "Shop not approved.");
             shopRepository.delete(shop);
         } else {
             shop.setApproved(true);
             AccountService.createShopAccount(shop);
             shopRepository.save(shop);
-            AccountService.adminProfit(shop.getCapital());
+            AccountService.adminProfit(shop.getCapital(), "Shop registration capital.");
         }
     }
 
