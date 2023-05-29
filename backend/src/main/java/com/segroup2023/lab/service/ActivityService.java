@@ -30,7 +30,7 @@ public class ActivityService {
                                    Double fullX, Double minusY, Double registrationCapitalThreshold,
                                    Long monthlySalesVolumeThreshold, Double monthlySalesAmountThreshold)
             throws InsufficientBalanceException {
-        AccountService.adminExpend(funds);
+        AccountService.adminExpend(funds, "Create an activity.");
         Set<ProductCategory> categories = new HashSet<>();
         for (String product: productCategories) {
             categories.add(productCategoryRepository.findByName(product));

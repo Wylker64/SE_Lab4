@@ -79,37 +79,37 @@ public class AccountService {
         accountRepository.save(dst);
     }
 
-    public static void transferToAdmin(Long userId, Double amount) throws InsufficientBalanceException {
+    public static void transferToAdmin(Long userId, Double amount, String remark) throws InsufficientBalanceException {
         Account account = getPersonalAccount(userId);
-        transfer(account, adminPersonal, amount,"Transfer to admin");
+        transfer(account, adminPersonal, amount,remark);
     }
 
-    public static void undoTransferToAdmin(Long userId, Double amount) {
+    public static void undoTransferToAdmin(Long userId, Double amount, String remark) {
         Account account = getPersonalAccount(userId);
         try {
-            transfer(adminPersonal, account, amount,"Undo transfer to admin");
+            transfer(adminPersonal, account, amount,remark);
         } catch (InsufficientBalanceException e) {
             throw new AssertionError("Insufficient balance in admin personal account.");
         }
     }
 
-    public static void adminProfit(Double amount) {
+    public static void adminProfit(Double amount, String remark) {
         try {
-            transfer(adminPersonal, adminProfit, amount,"Admin profit");
+            transfer(adminPersonal, adminProfit, amount,remark);
         } catch (InsufficientBalanceException e) {
             throw new AssertionError("Insufficient balance in admin personal account.");
         }
     }
 
-    public static void adminExpend(Double amount) throws InsufficientBalanceException {
-            transfer(adminProfit, adminPersonal, amount,"Admin expend");
+    public static void adminExpend(Double amount, String remark) throws InsufficientBalanceException {
+            transfer(adminProfit, adminPersonal, amount,remark);
     }
 
-    public static void shopProfit(Long shopId, Double amount) {
+    public static void shopProfit(Long shopId, Double amount, String remark) {
         Shop shop = ShopService.findById(shopId);
         Account shopAccount = getAccount(shop.getAccount());
         try {
-            transfer(adminPersonal, shopAccount, amount,"Shop profit");
+            transfer(adminPersonal, shopAccount, amount,remark);
         } catch (InsufficientBalanceException e) {
             throw new AssertionError("Insufficient balance in admin personal account.");
         }
@@ -122,7 +122,7 @@ public class AccountService {
         Account ownerAccount = ownerList.get(0);
         Account shopAccount = findById(shop.getAccount());
         try {
-            shopAccount.transferTo(ownerAccount, shopAccount.getBalance(),"Shop deletion,shop account balance transfer to owner account.");
+            shopAccount.transferTo(ownerAccount, shopAccount.getBalance(),"Shop deletion, shop account balance transfer to owner account.");
         } catch (InsufficientBalanceException e) {
             //Impossible exception, ignore
         }
