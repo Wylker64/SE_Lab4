@@ -174,9 +174,9 @@ public class OrderService {
     public static void receive(Long orderShopId) {
         OrderShopEntity shopEntity = getShopEntity(orderShopId);
         assert shopEntity.getRefund() == ApplyStatus.NONE || shopEntity.getRefund() == ApplyStatus.DENIED;
-        Double cost = shopEntity.getCost() - shopEntity.getDiscount();
+        double cost = shopEntity.getCost() - shopEntity.getDiscount();
         AccountService.adminProfit(0.05 * cost, "Order completed.");
-        AccountService.shopProfit(shopEntity.getShop(), (1-0.05) * cost, "Order completed.");
+        AccountService.shopProfit(shopEntity.getShop(), (1-0.05) * cost + shopEntity.getDiscount(), "Order completed.");
         shopEntity.setStatus(OrderStatus.DONE);
         shopRepository.save(shopEntity);
         Long volume = 0L;
