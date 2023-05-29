@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
+import java.time.*;
 
 
 @Entity
@@ -22,8 +22,11 @@ public class Activity {
     private String name;
 
     @Getter
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
+
     @Getter
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
     @Getter
     private Double funds;
@@ -84,5 +87,21 @@ public class Activity {
 
     public boolean hasSufficientFund() {
         return remainingFunds >= minusY;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void adjustTimezone()
+    {
+        LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startTime.toInstant(), ZoneId.systemDefault());
+        LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+
+        // Change timezone to UTC+8
+        ZonedDateTime startZonedDateTime = startLocalDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
+        ZonedDateTime endZonedDateTime = endLocalDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
+
+        // Convert back to java.util.Date
+        startTime = Date.from(startZonedDateTime.toInstant());
+        endTime = Date.from(endZonedDateTime.toInstant());
     }
 }
